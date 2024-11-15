@@ -66,6 +66,6 @@ We thank **Dicoding Indonesia**, **Bangkit Academy 2024**, and **Mulawarman Univ
 ## **Contact Us**  
 For questions or collaboration opportunities, feel free to reach out:  
 - **Team Leader:** Ahmad Nur Fauzan  
-- **Email:** [Your Email Here]  
+- **Email:** anfauzan010104@gmail.com  
 
 Let’s make healthier choices together with **NutriSee**!  
