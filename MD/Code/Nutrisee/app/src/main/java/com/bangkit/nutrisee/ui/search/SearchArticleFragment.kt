@@ -26,7 +26,7 @@ class SearchArticleFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val homeViewModel =
-            ViewModelProvider(this).get(ListViewModel::class.java)
+            ViewModelProvider(this).get(SearchArticleViewModel::class.java)
 
         _binding = FragmentSearchArticleBinding.inflate(inflater, container, false)
         val root: View = binding.root
