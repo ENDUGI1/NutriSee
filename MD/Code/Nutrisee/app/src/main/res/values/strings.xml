@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Nutrisee</string>
+
+    <string name="title_search">Search</string>
+    <string name="title_scan">Scan</string>
+    <string name="title_list">List</string>
+    <string name="title_profile">Profile</string>
+</resources>
