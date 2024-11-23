@@ -14,32 +14,57 @@ import com.bangkit.nutrisee.ui.list.ListViewModel
 
 class SearchArticleFragment : Fragment() {
 
-    private var _binding: FragmentSearchArticleBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    companion object {
+        fun newInstance() = SearchArticleFragment()
+    }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(SearchArticleViewModel::class.java)
-
-        _binding = FragmentSearchArticleBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textSearchArticle
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        return inflater.inflate(R.layout.fragment_search_article, container, false)
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+//class SearchArticleFragment : Fragment() {
+//
+//    private var _binding: FragmentSearchArticleBinding? = null
+//
+//    // This property is only valid between onCreateView and
+//    // onDestroyView.
+//    private val binding get() = _binding!!
+//
+//    override fun onCreateView(
+//        inflater: LayoutInflater,
+//        container: ViewGroup?,
+//        savedInstanceState: Bundle?
+//    ): View {
+//        val homeViewModel =
+//            ViewModelProvider(this).get(SearchArticleViewModel::class.java)
+//
+//        _binding = FragmentSearchArticleBinding.inflate(inflater, container, false)
+//        val root: View = binding.root
+//
+//        val textView: TextView = binding.textSearchArticle
+//        homeViewModel.text.observe(viewLifecycleOwner) {
+//            textView.text = it
+//        }
+//        return root
+//    }
+//
+//    override fun onDestroyView() {
+//        super.onDestroyView()
+//        _binding = null
+//    }
+//}
