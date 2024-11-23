@@ -14,8 +14,8 @@ class SectionsPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) 
     override fun createFragment(position: Int): Fragment {
         var fragment: Fragment? = null
         when (position) {
-            0 -> fragment = SearchArticleFragment()
-            1 -> fragment = SearchProductFragment()
+            0 -> fragment = SearchProductFragment()
+            1 -> fragment = SearchArticleFragment()
         }
         return fragment as Fragment
     }

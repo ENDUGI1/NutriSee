@@ -39,12 +39,11 @@ class SearchFragment : Fragment(){
             viewPager.adapter = SectionsPagerAdapter
             TabLayoutMediator(tabs, viewPager) { tab, position ->
                 tab.text = when (position) {
-                    0 -> "Articles"
-                    1 -> "Products"
+                    0 -> "Products"
+                    1 -> "Articles"
                     else -> null
                 }
             }.attach()
-
         }
     }
 
