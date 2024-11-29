@@ -6,9 +6,9 @@
     app:startDestination="@+id/navigation_search">
     <fragment
         android:id="@+id/navigation_search"
-        android:name="com.bangkit.nutrisee.ui.search.SearchArticleFragment"
-        android:label="fragment_search_article"
-        tools:layout="@layout/fragment_search_article" />
+        android:name="com.bangkit.nutrisee.ui.search.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/navigation_scan"
         android:name="com.bangkit.nutrisee.ui.scan.ScanFragment"
