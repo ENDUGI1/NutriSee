@@ -11,6 +11,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.bangkit.nutrisee.MainActivity
+import com.bangkit.nutrisee.ui.welcome.WelcomeActivity
 
 class SplashActivity : AppCompatActivity() {
 
@@ -22,7 +23,7 @@ class SplashActivity : AppCompatActivity() {
 
         // Handler untuk menunda perpindahan ke MainActivity
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, WelcomeActivity::class.java))
             finish()
         }, SPLASH_DELAY)
     }

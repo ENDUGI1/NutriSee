@@ -66,5 +66,7 @@ dependencies {
 
     implementation (libs.android.gif.drawable)
 
+    implementation (libs.androidx.datastore.preferences)
+    implementation (libs.androidx.datastore.preferences.core)
 
 }
