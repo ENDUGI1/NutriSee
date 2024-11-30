@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
+import com.bangkit.nutrisee.R
 import com.bangkit.nutrisee.databinding.FragmentListBinding
 import com.bangkit.nutrisee.databinding.FragmentSearchBinding
 import com.bangkit.nutrisee.ui.search.SectionsPagerAdapter
@@ -34,14 +36,23 @@ class ListFragment : Fragment() {
         with(binding){
             viewPager.adapter = ListPagerAdapter
             TabLayoutMediator(tabs, viewPager) { tab, position ->
-                tab.text = when (position) {
+                val tabText = when (position) {
                     0 -> "Riwayat"
                     1 -> "Favorit"
                     else -> null
                 }
+                tab.customView = createCustomTabView(tabText)
             }.attach()
 
         }
+    }
+
+    // Fungsi untuk membuat custom view tab
+    private fun createCustomTabView(text: String?): View {
+        val textView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_tab, null) as TextView
+        textView.text = text
+        textView.typeface = ResourcesCompat.getFont(requireContext(), R.font.visbybold)
+        return textView
     }
 
     override fun onDestroy() {
@@ -49,35 +60,3 @@ class ListFragment : Fragment() {
         _binding = null
     }
 }
-
-//class ListFragment : Fragment() {
-//
-//    private var _binding: FragmentListBinding? = null
-//
-//    // This property is only valid between onCreateView and
-//    // onDestroyView.
-//    private val binding get() = _binding!!
-//
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View {
-//        val homeViewModel =
-//            ViewModelProvider(this).get(ListViewModel::class.java)
-//
-//        _binding = FragmentListBinding.inflate(inflater, container, false)
-//        val root: View = binding.root
-//
-//        val textView: TextView = binding.textList
-//        homeViewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
-//        return root
-//    }
-//
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        _binding = null
-//    }
-//}
