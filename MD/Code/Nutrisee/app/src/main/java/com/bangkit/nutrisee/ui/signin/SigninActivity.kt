@@ -35,6 +35,7 @@ class SigninActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signin)
+        supportActionBar?.hide()
 
         // Initialize UI components
         emailEditText = findViewById(R.id.et_email)

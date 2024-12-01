@@ -24,6 +24,7 @@ class WelcomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
 
         // Inisialisasi UserPreferences dengan DataStore
         userPreferences = UserPreferences.getInstance(applicationContext.userPreferencesDataStore)

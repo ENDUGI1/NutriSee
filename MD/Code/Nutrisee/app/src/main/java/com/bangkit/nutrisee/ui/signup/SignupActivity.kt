@@ -22,6 +22,7 @@ class SignupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_signup)
+        supportActionBar?.hide()
 
         // Set up window insets for edge-to-edge display
 
@@ -42,6 +43,12 @@ class SignupActivity : AppCompatActivity() {
             // Basic validation
             if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                 Toast.makeText(this, "Semua field harus diisi!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Email format validation
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(this, "Format email tidak valid!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
