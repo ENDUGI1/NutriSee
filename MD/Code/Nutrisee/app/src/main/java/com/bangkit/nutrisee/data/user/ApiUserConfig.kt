@@ -7,13 +7,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiUserConfig {
     companion object {
-        private const val BASE_URL = "http://47.236.141.252:5000/api/v1/" // Ganti dengan URL API Anda
+        private const val BASE_URL = "http://192.168.202.100:5000/api/v1/" // Ganti dengan URL API Anda
 
         fun getApiService(): ApiUserService {
             // Interceptor untuk logging request dan response
             val loggingInterceptor = HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             }
+
             // OkHttpClient dengan interceptor
             val client = OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
@@ -30,3 +31,5 @@ class ApiUserConfig {
         }
     }
 }
+
+//"http://47.236.141.252:5000/api/v1/"
