@@ -36,11 +36,10 @@
     </com.google.android.material.bottomappbar.BottomAppBar>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/navigation_scan"
+        android:id="@+id/scan_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_scan"
-        android:contentDescription="@string/scan_button_description"
         app:layout_anchor="@id/bottomAppBar"
         app:backgroundTint="@color/green"
         app:tint="@android:color/white"
