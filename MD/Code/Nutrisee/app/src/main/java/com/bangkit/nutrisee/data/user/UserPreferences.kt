@@ -10,7 +10,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 // Extension untuk DataStore
-val Context.userPreferencesDataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
+val Context.userPreferencesDataStore:
+        DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
 
 // Data class untuk menyimpan data user
 data class UserData(

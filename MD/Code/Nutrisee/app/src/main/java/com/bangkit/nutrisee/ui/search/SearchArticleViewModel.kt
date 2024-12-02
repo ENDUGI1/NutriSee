@@ -26,11 +26,13 @@ class SearchArticleViewModel : ViewModel() {
                 response: Response<HealthNewsResponse>
             ) {
                 if (response.isSuccessful) {
-                    _articles.postValue((response.body()?.articles ?: emptyList()) as List<ArticlesItem>?)
+                    val articlesList = response.body()?.articles?.filterNotNull() ?: emptyList()
+                    _articles.postValue(articlesList)
                 } else {
                     Log.e("SearchArticleViewModel", "Error: ${response.errorBody()?.string()}")
                 }
             }
+
 
             override fun onFailure(call: Call<HealthNewsResponse>, t: Throwable) {
                 Log.e("SearchArticleViewModel", "Failure: ${t.message}")

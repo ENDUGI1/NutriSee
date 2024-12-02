@@ -24,6 +24,7 @@ loggingInterceptor = "4.11.0"
 retrofit = "2.9.0"
 cronetEmbedded = "119.6045.31"
 activity = "1.9.3"
+datastoreCoreAndroid = "1.1.1"
 
 [libraries]
 android-gif-drawable = { module = "pl.droidsonroids.gif:android-gif-drawable", version.ref = "androidGifDrawable" }
@@ -50,6 +51,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 retrofit2-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 cronet-embedded = { group = "org.chromium.net", name = "cronet-embedded", version.ref = "cronetEmbedded" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }
 
 
 

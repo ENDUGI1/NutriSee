@@ -2,19 +2,15 @@ package com.bangkit.nutrisee.ui.search
 
 import android.content.Intent
 import android.net.Uri
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bangkit.nutrisee.R
-import com.bangkit.nutrisee.databinding.FragmentSearchArticleBinding
-import com.bangkit.nutrisee.ui.list.ListViewModel
 
 class SearchArticleFragment : Fragment() {
 
@@ -32,7 +28,7 @@ class SearchArticleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Initialize ViewModel
-        viewModel = ViewModelProvider(this).get(SearchArticleViewModel::class.java)
+        viewModel = ViewModelProvider(this)[SearchArticleViewModel::class.java]
 
         // Setup RecyclerView
         articleAdapter = ArticleAdapter { url ->
