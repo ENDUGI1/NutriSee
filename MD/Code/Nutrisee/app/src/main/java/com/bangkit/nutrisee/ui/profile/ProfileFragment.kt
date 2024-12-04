@@ -53,7 +53,7 @@ class ProfileFragment : Fragment() {
         }
 
         xButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://x.com/nutrisee"))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://x.com/nutrisee242137"))
             startActivity(intent)
         }
 

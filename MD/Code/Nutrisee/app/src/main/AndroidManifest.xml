@@ -20,6 +20,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.scan.ConfirmScanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.detailactivity.DetailProductActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.scan.ScanActivity"
             android:exported="false" />
         <activity
