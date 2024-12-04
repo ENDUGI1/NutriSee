@@ -127,6 +127,16 @@
         android:layout_marginTop="24dp"
         app:backgroundTint="@color/green"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/signupButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
     <TextView
         android:id="@+id/loginLink"
         android:layout_width="wrap_content"
@@ -137,7 +147,7 @@
         android:textColor="@color/gray"
         android:layout_marginTop="16dp"
         android:clickable="true"
-        app:layout_constraintTop_toBottomOf="@id/signupButton"
+        app:layout_constraintTop_toBottomOf="@id/progressBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

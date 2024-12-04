@@ -3,8 +3,10 @@ package com.bangkit.nutrisee.ui.signup
 import SignupViewModel
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -15,6 +17,8 @@ import com.bangkit.nutrisee.ui.signin.SigninActivity
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var viewModel: SignupViewModel
+    private lateinit var progressBar: ProgressBar
+    private lateinit var signupButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,8 +32,9 @@ class SignupActivity : AppCompatActivity() {
         val emailInput = findViewById<EditText>(R.id.emailInput)
         val passwordInput = findViewById<EditText>(R.id.passwordInput)
         val confirmPasswordInput = findViewById<EditText>(R.id.confirmPasswordInput)
-        val signupButton = findViewById<Button>(R.id.signupButton)
+        signupButton = findViewById(R.id.signupButton)
         val loginLink = findViewById<TextView>(R.id.loginLink)
+        progressBar = findViewById(R.id.progressBar)
 
         // Login link navigation
         loginLink.setOnClickListener {
@@ -39,6 +44,9 @@ class SignupActivity : AppCompatActivity() {
 
         // Observe registration result
         viewModel.registrationResult.observe(this) { result ->
+            // Hide loading
+            showLoading(false)
+
             result.onSuccess { message ->
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 finish() // Close SignupActivity
@@ -54,7 +62,14 @@ class SignupActivity : AppCompatActivity() {
             val password = passwordInput.text.toString().trim()
             val confirmPassword = confirmPasswordInput.text.toString().trim()
 
+            // Show loading
+            showLoading(true)
             viewModel.registerUser(username, email, password, confirmPassword)
         }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        signupButton.isEnabled = !isLoading
     }
 }

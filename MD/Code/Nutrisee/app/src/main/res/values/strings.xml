@@ -29,4 +29,5 @@
     <string name="welcome_to_nutrisee">Welcome to NutriSee</string>
     <string name="slogan">Choose Smart, Healthy Living with NutriSee</string>
     <string name="scan_button_description">Scan Nutrition Table</string>
+    <string name="logout">Logout</string>
 </resources>
