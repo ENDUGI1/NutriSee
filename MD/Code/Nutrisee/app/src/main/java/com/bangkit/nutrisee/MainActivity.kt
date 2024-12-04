@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val navView: BottomNavigationView = binding.navView
+        navView.background = null
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
