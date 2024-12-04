@@ -131,10 +131,12 @@
         android:id="@+id/loginLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:focusable="true"
         android:text="@string/already_have_an_account_login"
         android:fontFamily="@font/visbylight"
         android:textColor="@color/gray"
         android:layout_marginTop="16dp"
+        android:clickable="true"
         app:layout_constraintTop_toBottomOf="@id/signupButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
