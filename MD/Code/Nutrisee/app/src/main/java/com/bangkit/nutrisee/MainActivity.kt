@@ -1,5 +1,6 @@
 package com.bangkit.nutrisee
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -10,6 +11,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bangkit.nutrisee.databinding.ActivityMainBinding
+import com.bangkit.nutrisee.ui.scan.ScanActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -45,11 +47,8 @@ class MainActivity : AppCompatActivity() {
 
         // Handle FAB click
         binding.scanFab.setOnClickListener {
-            if (::navController.isInitialized) {
-                navController.navigate(R.id.navigation_scan)
-            } else {
-                Log.e("Debug", "NavController is not initialized")
-            }
+            val intent = Intent(this, ScanActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -57,4 +56,3 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }
-

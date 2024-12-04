@@ -16,11 +16,7 @@
         android:name="com.bangkit.nutrisee.ui.search.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
-    <fragment
-        android:id="@+id/navigation_scan"
-        android:name="com.bangkit.nutrisee.ui.scan.ScanFragment"
-        android:label="fragment_scan"
-        tools:layout="@layout/fragment_scan" />
+
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.bangkit.nutrisee.ui.profile.ProfileFragment"

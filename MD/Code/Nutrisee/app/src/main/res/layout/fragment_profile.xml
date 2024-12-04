@@ -35,7 +35,7 @@
             android:id="@+id/button_x"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/twitter"
+            android:src="@drawable/ic_x"
             android:background="@android:color/transparent"
             android:contentDescription="Follow us on X"
             android:layout_marginEnd="16dp" />
@@ -44,7 +44,7 @@
             android:id="@+id/button_instagram"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/instagram"
+            android:src="@drawable/ic_ig"
             android:background="@android:color/transparent"
             android:contentDescription="Follow us on Instagram" />
 
