@@ -54,6 +54,8 @@ dependencies {
     implementation(libs.cronet.embedded)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.datastore.core.android)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.lifecycle)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -70,6 +72,10 @@ dependencies {
     implementation (libs.androidx.datastore.preferences)
     implementation (libs.androidx.datastore.preferences.core)
 
+    implementation ("androidx.camera:camera-core:1.4.0")
+    implementation(libs.camera.camera2)
+    implementation("androidx.camera:camera-lifecycle:1.4.0")
+    implementation("androidx.camera:camera-view:1.4.0")
 
 
 
