@@ -1,0 +1,502 @@
+openapi: 3.0.0
+info:
+  title: Backend API Nutrisee App
+  description: All basic API endpoint for Nutrisee App
+  version: 1.0.0
+  termsOfService: /terms-of-use
+# Relative URL to external documentation
+externalDocs:
+  url: /docs
+  description: Find more info here
+  
+servers:
+  # - url: http://localhost:5000/api/v1
+  #   description: main url production server
+  - url: https://nutriseeapi-838915593985.asia-southeast2.run.app/api/v1/
+  # - url: http://localhost:5000/api/v1
+    description: Staging server for testing
+
+
+
+paths:
+  /profile:
+    get:
+      summary: Mendapatkan profil pengguna
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: informasi pengguna berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: Refresh token tidak valid
+        '403':
+          description: Tidak diotorisasi
+
+
+  # /users:
+  #   get:
+  #     summary: Mendapatkan semua data pengguna
+  #     tags:
+  #       - Users
+  #     security:
+  #       - bearerAuth: []
+  #     responses:
+  #       '200':
+  #         description: Data pengguna berhasil diambil
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/User'
+  #       '401':
+  #         description: Token tidak valid
+  #       '403':
+  #         description: Tidak diotorisasi
+
+  /register:
+    post:
+      summary: Mendaftarkan pengguna baru
+      tags:
+        - Users
+      requestBody:
+        description: Data pengguna untuk pendaftaran
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+      responses:
+        '201':
+          description: Pengguna berhasil terdaftar
+        '400':
+          description: password dan confirm password tidak cocok, username atau email sudah terdaftar
+
+  /login:
+    post:
+      summary: Login pengguna
+      tags:
+        - Auth
+      requestBody:
+        description: Data login pengguna
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: Login berhasil
+        '400':
+          description: Password salah
+        '404':
+          description: email tidak ditemukan
+
+  /token:
+    post:
+      summary: Refresh token untuk sesi pengguna
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+                  example: "your-refresh-token"
+      responses:
+        '200':
+          description: Token berhasil diperbarui
+        '401':
+          description: Refresh token tidak valid
+        '403': 
+          description: Tidak diotorisasi
+
+  /auth/google:
+    get:
+      summary: Login dengan Google
+      tags: 
+        - Auth
+      responses:
+        '302':
+          description: Redirect ke link login Google
+          headers:
+            Location:
+              description: URL untuk login Google
+              schema:
+                type: string
+                example: "https://accounts.google.com/o/oauth2/v2/auth?... "
+
+        
+  /auth/google/callback:
+    get:
+      summary: Callback setelah login dengan Google
+      parameters:
+        - in: query
+          name: code
+          required: true
+          description: Code dari Google
+          schema:
+            type: string
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: Login berhasil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: object
+                    properties:
+                      refreshToken:
+                        type: string
+                      expiresIn:
+                        type: string
+        '400':
+          description: Gagal Login
+        '500':
+          description: Failed to exchange token
+          
+  /forgot-password:
+    post:
+      summary: Mengirimkan email permintaan reset password
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "email@example.com"
+      responses:
+        '200':
+          description: Email reset password berhasil dikirim
+        '400':
+          description: Email tidak ditemukan
+
+  
+  /reset-password/{id}/{token}:
+    get:
+      summary: Mengambil halaman reset password
+      tags:
+        - Auth
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID pengguna
+          schema:
+            type: string
+        - in: path
+          name: token
+          required: true
+          description: Token reset password
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Halaman reset password berhasil dimuat
+        '400':
+          description: Token tidak valid atau sudah kadaluarsa
+        '401':
+          description: Pengguna tidak ditemukan atau password tidak cocok
+      
+    post:
+      summary: Mengatur ulang password pengguna
+      tags:
+        - Auth
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID pengguna
+          schema:
+            type: string
+        - in: path
+          name: token
+          required: true
+          description: Token reset password
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  format: password
+                confirmPassword:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Password berhasil diatur ulang
+        '400':
+          description: Password dan konfirmasi password tidak cocok
+        '422':
+          description: Password dan konfirmasi password tidak sesuai aturan
+        '401':
+          description: Token tidak valid atau kadaluarsa
+        '404':
+          description: Pengguna tidak ditemukan
+        '500':
+          description: Terjadi kesalahan dalam proses pengubahan password
+
+
+  /logout:
+    delete:
+      summary: Logout pengguna
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+                  description: Refresh token yang digunakan untuk logout
+      responses:
+        '200':
+          description: Logout berhasil
+        '204':
+          description: Refresh token tidak ditemukan atau tidak ada konten
+        '400':
+          description: Refresh token tidak valid
+        '401':
+          description: Tidak diotorisasi
+        '500':
+          description: Terjadi kesalahan saat proses logout
+
+
+  
+  /product:
+    get:
+      summary: Mendapatkan daftar produk
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Daftar produk berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '401':
+          description: Token tidak valid
+        '403':
+          description: Tidak diotorisasi
+    
+    post:
+      summary: Menambahkan produk baru
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: Produk berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Data produk tidak valid
+        '401':
+          description: Token tidak valid
+        '403':
+          description: Tidak diotorisasi
+          
+  
+  /product/{id}:
+    get:
+      summary: Mendapatkan detail produk berdasarkan ID
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID produk
+          schema:
+            type: integer
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Detail produk berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Produk tidak ditemukan
+        '401':
+          description: Token tidak valid
+        '403':
+          description: Tidak diotorisasi
+
+
+  /news:
+    get:
+      summary: Mengambil daftar berita dari API eksternal dan menambahkannya datanya kedatabase atau mengambil data dari cadangan database
+      tags:
+        - News
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Berita berhasil diambil dari API eksternal atau cadangan database. Jika API gagal, data diambil dari database.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/News'
+        '500':
+          description: Gagal mengambil data berita dari API eksternal maupun database cadangan
+
+  
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        refresh_token:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt :
+          type: string
+          format: date-time
+
+    UserRegistration:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        username:
+          type: string
+          example: "username"
+        email:
+          type: string
+          example: "email@gmail.com"
+        password:
+          type: string
+          format: password
+        confPassword:
+          type: string
+          format: password
+
+    UserLogin:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: "email@gmail.com"
+        password:
+          type: string
+          format: password
+    
+    News:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Kesehatan Mental di Tengah Pandemi"
+        description:
+          type: string
+          example: "Pandemi telah mempengaruhi kesehatan mental masyarakat. Artikel ini membahas dampaknya."
+        source:
+          type: string
+          example: "BBC News"
+        date_published:
+          type: string
+          format: date-time
+          example: "2024-11-24T10:00:00Z"
+        url:
+          type: string
+          example: "https://www.bbc.com/health-article"
+        image:
+          type: string
+          example: "https://www.bbc.com/health-image.jpg"
+        category:
+          type: string
+          example: "health"
+    
+    Product:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Minuman Sehat"
+        image:
+          type: string
+          example: "https://example.com/image.jpg"
+        gradien:  # Jika ini adalah "grade", ganti menjadi nutriGrade atau grade
+          type: string
+          example: "B"
+        category:
+          type: string
+          enum: ["makanan", "minuman"]
+          example: "minuman"
+      required:
+        - name
+        - gradien
+        - category
+        - userId
