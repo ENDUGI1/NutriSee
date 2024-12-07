@@ -2,7 +2,3 @@
 .env
 clientSecret.json
 request.res
-.git
-test.txt
-*.rest
-

@@ -1,7 +1,8 @@
 import Users from './models/UserModel.js';
 import News from './models/NewsModel.js';
-import Product from './models/ProductModel.js';
 import PasswordReset from './models/PasswordReset.js'
+
+
 import express from 'express';
 import db  from './config/Database.js';
 import router from './routes/index.js'
@@ -16,37 +17,30 @@ import { softLimiter } from './middleware/limiter.js';
 import  AuditLog  from './utils/auditLog.js';
 
 let swaggerDocument = yaml.load('./swagger.yaml');
-const url = process.env.BASE_URL || 'http://localhost:5000'; // Set url 
-swaggerDocument.servers = [{ url: `${url}/api/v1/`, description: 'Stagging api URL' }]
+const url = process.env.BASE_URL || 'localhost:5000/api/v1'; // Set url 
+swaggerDocument.servers = [{ url: url, description: 'Stagging api URL' }]
 
 const app = express();
-const port = process.env.PORT || 8080;
-
-const syncTable = async() => {
-    await Users.sync(); // nyalakan code ini untuk membuat tabel di db, kemudian matikan
-    await Product.sync(); // nyalakan code ini untuk membuat tabel di db, kemudian matikan
-    await News.sync(); // nyalakan code ini untuk membuat tabel di db, kemudian matikan
-
-    await PasswordReset.sync();
-    
-}
+const port = process.env.PORT || 3000;
+app.set('view engine', 'ejs');
 
 try {
     await db.authenticate();
-    // await syncTable();
+    // await Users.sync(); // nyalakan code ini untuk membuat tabel di db, kemudian matikan
+    // await News.sync(); // nyalakan code ini untuk membuat tabel di db, kemudian matikan
+    // await PasswordReset.sync();
     
     console.log('database Connected')
 } catch (error) {
     console.error(error);
     
+
 }
 
 
-app.set('view engine', 'ejs');
-// app.set('trust proxy', true)
 app.use(softLimiter);
 app.use((req, res, next) => {
-    res.setTimeout(20000, () => { // timeout 20 detik
+    res.setTimeout(10000, () => { // timeout 5 detik
       res.status(503).json({ message: "Permintaan timeout. Silakan coba lagi." });
     });
     next();
@@ -56,9 +50,22 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 
-// app.use(AuditLog);
+app.use(AuditLog);
 
-
+// app.use((req,res, next) => {
+//   const now = new Date();
+//   const formattedDate = now.toLocaleString('en-US', { 
+//     year: 'numeric', 
+//     month: '2-digit', 
+//     day: '2-digit', 
+//     hour: '2-digit', 
+//     minute: '2-digit', 
+//     second: '2-digit', 
+//     hour12: false 
+//   });
+//   console.log(`${req.method} ${req.path} FROM ${req.headers['x-real-ip'] ||req.headers['x-forwarded-for']?.split(',')[0] || req.ip}  TIME: ${formattedDate} - SOURCE: ${req.get('user-agent')}`);
+//   next();
+// })
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req,res) => {

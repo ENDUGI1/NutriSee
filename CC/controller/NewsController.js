@@ -11,23 +11,18 @@ export const fetchNews = async (req, res) => {
             }
         });
         const newsData = response.data.data;
-        const randomNewsData = newsData.sort(() => Math.random() - 0.5); 
-
-        //nyalakan jika belum ada data tersimapan didatabase
-        // for (const news of newsData) {
-        //     await News.create({
-        //         title: news.title,
-        //         description: news.description,
-        //         source: news.source,
-        //         date_published: news.published_at,
-        //         url: news.url,
-        //         image: news.image,
-        //         category: news.category
-        //     });
-        // }
-
-
-        return res.status(200).json(randomNewsData);
+        for (const news of newsData) {
+            await News.create({
+                title: news.title,
+                description: news.description,
+                source: news.source,
+                date_published: news.published_at,
+                url: news.url,
+                image: news.image,
+                category: news.category
+            });
+        }
+        return res.status(200).json(newsData);
 
     } catch (error) {
         console.error('Error fetching news from API:', error.message);
@@ -38,10 +33,9 @@ export const fetchNews = async (req, res) => {
             });
 
             if (backupNews.length > 0) {
-                const randomBackupNews = backupNews.sort(() => Math.random() - 0.5);
                 return res.status(200).json({
                     message: 'API gagal, data cadangan diambil dari database.',
-                    data: randomBackupNews
+                    data: backupNews
                 });
             } else {
                 return res.status(404).json({ message: 'Tidak ada data cadangan di database.' });
