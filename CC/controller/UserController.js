@@ -7,16 +7,21 @@ import sendEmail from './EmailController.js';
 import { Op } from 'sequelize';
 import { nanoid } from "nanoid";
 import {google} from 'googleapis';
+import { OAuth2Client } from 'google-auth-library';
 import dotenv from 'dotenv';
 dotenv.config();
 import HTML_TEMPLATE from '../utils/htmlTemplate.js';
+import { authConfig } from '../config/AuthConfig.js';
+import { TokenUtils } from '../utils/tokenUtils.js';
 const appUrl = process.env.BASE_URL || 'http://localhost:5000';
 
-const oauth2Client = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-    `${appUrl}/api/v1/auth/google/callback`,
-);
+const client = new OAuth2Client(authConfig.GOOGLE_CLIENT_ID);
+
+// const oauth2Client = new google.auth.OAuth2(
+//     process.env.GOOGLE_CLIENT_ID,
+//     process.env.GOOGLE_CLIENT_SECRET,
+//     `${appUrl}/api/v1/auth/google/callback`,
+// );
 const scopes = [
     'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/userinfo.email',
@@ -24,19 +29,28 @@ const scopes = [
 ]
 
 const profile = async(req,res) => {
-    const { id } = req.params
+   
+    const email  = req.email
+    
     try {
         const user= await Users.findOne({
             where:{
-                id: id
+                email: email
             },
             attributes: ['username', 'email', 'createdAt']
 
         })
 
-        res.status(200).json({data: user})
+        res.status(200).json({
+            error: false,
+            data: user
+        })
     } catch (error) {
-        
+        console.error(error);
+        res.status(500).json({
+            error: true,
+            message: "server error"
+        })
     }
 }
 
@@ -59,7 +73,11 @@ const Register = async(req, res) => {
     const { username , email, password, confPassword }= req.body;
     
     
-    if(password !== confPassword) return res.status(400).json({message: "password dan confirm password tidak cocok"})
+    if(password !== confPassword) return res.status(400).json({
+        error: true,
+        message: "password dan confirm password tidak cocok"
+    })
+    
     const id = nanoid(16);
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
@@ -74,7 +92,9 @@ const Register = async(req, res) => {
             
         });
 
-        if(hasUser) return res.status(400).json({message: "username atau email sudah terdaftar"});
+        if(hasUser) return res.status(400).json({
+            error: true,
+            message: "username atau email sudah terdaftar"});
 
 
         await Users.create({
@@ -83,7 +103,7 @@ const Register = async(req, res) => {
             email: email,
             password: hashPassword
         })
-        res.status(201).json({message: "Register berhasil"});
+        res.status(201).json({error: false,message: "Register berhasil"});
         return
     } catch (error) {
         console.error(error);
@@ -95,24 +115,24 @@ const Login = async(req, res) => { // login with email and password only , modif
 
     try {
         
-        const user = await Users.findAll({
+        const user = await Users.findOne({
             where:{
-                email: req.body.email
-                
+                [Op.or]: [
+                    {email: req.body.email},
+                    {username: req.body.email}
+                ]
             }
         })
-        const match = await bcrypt.compare(req.body.password, user[0].password);
-        if(!match) return res.status(400).json({message: "password salah"})
-        const userId = user[0].id;
-        const username = user[0].username;
-        const email = user[0].email;
-        const accessToken = jwt.sign({userId,username,email}, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: '30s'
-        })
+        const match = await bcrypt.compare(req.body.password, user.password);
+        if(!match) return res.status(400).json({error: true,message: "username atau password salah"})
+        const userId = user.id;
+        // const username = user[0].username;
+        // const email = user[0].email;
+        // console.log(user);
+        
+        const accessToken = TokenUtils.generateAccessToken(user)
 
-        const refreshToken = jwt.sign({userId,username,email}, process.env.REFRESH_TOKEN_SECRET, {
-            expiresIn: '1d'
-        })
+        const refreshToken = TokenUtils.generateRefreshToken(user)
         // console.log(userId,username,email);
 
         await Users.update({refresh_token: refreshToken}, {
@@ -129,99 +149,155 @@ const Login = async(req, res) => { // login with email and password only , modif
         // })
 
         return res.status(200).json({
+            error: false,
             message: "Login berhasil",
             accessToken: accessToken,
             refreshToken: {
                 token: refreshToken,
-                expiresIn: '1d' // 1 hari
+                expiresIn: TokenUtils.expiresRefreshToken // 1 hari
             },
         });
     } catch (error) {
-        res.status(404).json({message: "email tidak ditemukan"})
+        console.error(error);
+        res.status(404).json({error: true,message: "email tidak ditemukan"})
     }
 }
 
-const redirectOauthLogin = async(req,res) => {
-    // return res.redirect(authUrl);
-    const authUrl= oauth2Client.generateAuthUrl({
-        access_type: 'offline',
-        scope: scopes.join(' '),
-        include_granted_scopes:true
-    })
-    // console.log(authUrl);
-    return res.redirect(authUrl)
+// const redirectOauthLogin = async(req,res) => {
+//     // return res.redirect(authUrl);
+    
+//     const authUrl= oauth2Client.generateAuthUrl({
+//         access_type: 'offline',
+//         scope: scopes.join(' '),
+//         include_granted_scopes:true
+//     })
+//     // console.log(authUrl);
+//     return res.redirect(authUrl)
 
-}
-const callbackOauthLogin = async (req, res) => {
-    const { code } = req.query;
-    // console.log("Authorization Code:", code); // Log kode otorisasi
+// }
+// const callbackOauthLogin = async (req, res) => {
+//     const { code } = req.query;
+   
+//     try {
+//         const { tokens } = await oauth2Client.getToken(code); // Mendapatkan token dari Google
+//         // console.log("Tokens Received:", tokens); // Log token yang diterima
 
-    try {
-        const { tokens } = await oauth2Client.getToken(code); // Mendapatkan token dari Google
-        // console.log("Tokens Received:", tokens); // Log token yang diterima
+//         oauth2Client.setCredentials(tokens);
 
-        oauth2Client.setCredentials(tokens);
+//         const oauth2 = google.oauth2({
+//             auth: oauth2Client,
+//             version: 'v2'
 
-        const oauth2 = google.oauth2({
-            auth: oauth2Client,
-            version: 'v2'
-        });
-        const { data } = await oauth2.userinfo.get();
-        // console.log("User Info:", data); // Log informasi pengguna
+//         });
+//         const { data } = await oauth2.userinfo.get();
+      
+//         if (!data.email || !data.name) {
+//             return res.status(400).json({ message: "Username atau email tidak ditemukan", data });
+//         }
 
-        if (!data.email || !data.name) {
-            return res.status(400).json({ message: "Username atau email tidak ditemukan", data });
-        }
+//         let user = await Users.findOne({
+//             where: { email: data.email }
+//         });
+//         const id = nanoid(16);
+//         if (!user) {
+//             user = await Users.create({
+//                 id: id,
+//                 username: data.name,
+//                 email: data.email,
+//             });
+//         }
 
-        let user = await Users.findOne({
-            where: { email: data.email }
-        });
-        const id = nanoid(16);
-        if (!user) {
-            user = await Users.create({
-                id: id,
-                username: data.name,
-                email: data.email,
-            });
-        }
+//         const payload = {
+//             id: user.id,
+//             username: user.username,
+//             email: user.email
+//         };
 
-        const payload = {
-            id: user.id,
-            username: user.username,
-            email: user.email
-        };
+//         const secret = process.env.ACCESS_TOKEN_SECRET;
+//         const refresh_token = process.env.REFRESH_TOKEN_SECRET;
 
-        const secret = process.env.ACCESS_TOKEN_SECRET;
-        const refresh_token = process.env.REFRESH_TOKEN_SECRET;
+//         const accessToken = jwt.sign(payload, secret, { expiresIn: '1h' });
+//         const refreshToken = jwt.sign(payload, refresh_token, { expiresIn: '1d' });
 
-        const accessToken = jwt.sign(payload, secret, { expiresIn: '1h' });
-        const refreshToken = jwt.sign(payload, refresh_token, { expiresIn: '1d' });
+//         await user.update({ refresh_token: refreshToken });
 
-        await user.update({ refresh_token: refreshToken });
-
-        // res.cookie('refreshToken', refreshToken, {
-        //     httpOnly: true,
-        //     maxAge: 24 * 60 * 60 * 1000, // 1 hari
-        // });
+//         // res.cookie('refreshToken', refreshToken, {
+//         //     httpOnly: true,
+//         //     maxAge: 24 * 60 * 60 * 1000, // 1 hari
+//         // });
         
-        return res.status(200).json({
-            message: "Login berhasil",
-            accessToken: accessToken,
-            refreshToken: {
-                refreshToken: refreshToken,
-                expiresIn: '1d' // 1 hari
-            },
+//         return res.status(200).json({
+//             error: false,
+//             message: "Login berhasil",
+//             accessToken: accessToken,
+//             refreshToken: {
+//                 refreshToken: refreshToken,
+//                 expiresIn: '1d' // 1 hari
+//             },
 
-        });
+//         });
         
 
-    } catch (error) {
-        console.error("Error during token exchange:", error.response?.data || error.message);
-        res.status(500).json({ error: "Failed to exchange token", details: error.response?.data || error.message });
-    }
-};
+//     } catch (error) {
+//         console.error("Kesalahan ketika pertukaran token:", error.response?.data || error.message);
+//         res.status(500).json({ error: "Kesalahan ketika pertukaran token:", details: error.response?.data || error.message });
+//     }
+// };
+
+// const verifyGoogleLogin = async(req,res) => {
+//     if(!client) {
+//         console.log("Google OAuth2 client tidak terinisialisasi.");
+//         return res.status(500).json({ error: "Google OAuth2 client tidak terinisialisasi." });
+//     }
+//     const { token } = req.body;
+//     console.log(token);
+//     try {
+//         const ticket = await client.verifyIdToken({
+//             idToken: token,
+//             audience: authConfig.GOOGLE_CLIENT_ID  // Pastikan sesuai
+//         });
+
+//         const payload = ticket.getPayload();
+
+//         if(!payload.name || !payload.email) {
+//             return res.status(400).json({ error: "Username atau email tidak ditemukan" });
+//         }
+//         let user = await Users.findOne({
+//             where: { email: payload.email }
+//         });
+//         const id = nanoid(16);
+//         if(!user){
+//             user = await Users.create({
+//                 id: id,
+//                 username: payload.name,
+//                 email: payload.email,
+//             });
+//         }
+
+//         const accessToken = TokenUtils.generateAccessToken(payload);
+//         const refreshToken = TokenUtils.generateRefreshToken(payload);
+
+//         // console.log(accessToken, refreshToken);
+//         await user.update({ refresh_token: refreshToken })
 
 
+//         return res.status(200).json({
+//             error: false,
+//             message: "Login berhasil",
+//             accessToken: accessToken,
+//             refreshToken: {
+//                 token: refreshToken,
+//                 expiresIn: TokenUtils.expiresRefreshToken // 1 hari
+//             },
+//         });
+
+        
+
+//     } catch (error) {
+//         console.error("Kesalahan saat verifikasi token:", error);
+//         return res.status(500).json({ error: "Kesalahan saat verifikasi token." });
+//     }
+// }
 
 const forgotPassword = async(req,res) => {
     const { email } = req.body;
@@ -230,7 +306,9 @@ const forgotPassword = async(req,res) => {
             email: email
         }
     })
-    if(!user) return res.status(400).json({message: "email tidak ditemukan" })
+    if(!user) return res.status(400).json({
+        message: "email tidak ditemukan" 
+    })
     
     await PasswordReset.destroy({
         where: {
@@ -367,7 +445,10 @@ const resetPassword = async(req,res) => {
                 userId: id
             }
         })
-        res.status(200).json({message : 'password berhasil diubah'});
+        res.status(200).json({ 
+            error: false,
+            message : 'password berhasil diubah' 
+        });
         // res.render('reset-password', { id, token, error: 'password tidak boleh sama dengan password sebelumnya' });
         
     } catch (error) {
@@ -378,23 +459,32 @@ const resetPassword = async(req,res) => {
 
 
 const logout = async(req,res) => {
-    const refreshToken = req.cookies.refreshToken;
-    if(!refreshToken) return res.sendStatus(204);
+    const { refreshToken }= req.body;
+
+    try {
+        if(!refreshToken) return res.status(400).json({error: true, message: "RefreshToken tidak valid"});
     const user = await Users.findAll({
         where:{
             refresh_token: refreshToken
         }
     })
-    if(!user[0]) return res.sendStatus(204);
+    if(!user[0]) return res.status(400).json({error:true, message: "RefreshToken tidak valid"});
     const userId = user[0].id;
     await Users.update({refresh_token: null}, {
         where:{
             id: userId
         }
     })
-    res.clearCookie('refreshToken');
+    // res.clearCookie('refreshToken');
     
-    return res.sendStatus(200);
+    return res.status(200).json({error:false, message: "Berhasil Logout"});
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error:true,  message: 'Gagal Logout' }); 
+        
+    }
+    
 }
 
 
@@ -409,6 +499,7 @@ profile,
  forgotPassword,
  getResetPassword,
  resetPassword,
+ verifyGoogleLogin
 
 }
 
