@@ -16,7 +16,19 @@ class SearchArticleViewModel : ViewModel() {
     private val _articles = MutableLiveData<List<ArticlesItem>>()
     val articles: LiveData<List<ArticlesItem>> = _articles
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> = _error
+
     fun fetchArticles() {
+        // Set loading to true before starting the fetch
+        _isLoading.value = true
+
+        // Reset error
+        _error.value = null
+
         val apiService = ApiNewsConfig.getApiService()
         val call = apiService.getNews(apiKey = "343117b1cf3549ab9c40350a712770e0")
 
@@ -25,20 +37,27 @@ class SearchArticleViewModel : ViewModel() {
                 call: Call<HealthNewsResponse>,
                 response: Response<HealthNewsResponse>
             ) {
+                // Always set loading to false when response is received
+                _isLoading.value = false
+
                 if (response.isSuccessful) {
                     val articlesList = response.body()?.articles?.filterNotNull() ?: emptyList()
-                    _articles.postValue(articlesList)
+                    _articles.value = articlesList
                 } else {
-                    Log.e("SearchArticleViewModel", "Error: ${response.errorBody()?.string()}")
+                    val errorMessage = "Error: ${response.code()} - ${response.message()}"
+                    Log.e("SearchArticleViewModel", errorMessage)
+                    _error.value = errorMessage
                 }
             }
 
-
             override fun onFailure(call: Call<HealthNewsResponse>, t: Throwable) {
-                Log.e("SearchArticleViewModel", "Failure: ${t.message}")
+                // Set loading to false on failure
+                _isLoading.value = false
+
+                val errorMessage = "Network error: ${t.message}"
+                Log.e("SearchArticleViewModel", errorMessage)
+                _error.value = errorMessage
             }
         })
     }
 }
-
-
