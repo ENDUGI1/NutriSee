@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
+import androidx.camera.core.ImageCapture
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.bangkit.nutrisee.databinding.ActivityScanBinding
@@ -41,6 +42,7 @@ class ScanActivity : AppCompatActivity() {
             val selectedImageUri = result.data?.data
             binding.apply {
                 capturedImage.setImageURI(selectedImageUri)
+                capturedImage.tag = selectedImageUri // Simpan URI ke tag
                 capturedImage.visibility = View.VISIBLE
                 viewFinder.visibility = View.GONE
                 fabProcess.visibility = View.VISIBLE
@@ -98,6 +100,7 @@ class ScanActivity : AppCompatActivity() {
                     val savedUri = Uri.fromFile(photoFile)
                     binding.apply {
                         capturedImage.setImageURI(savedUri)
+                        capturedImage.tag = savedUri // Simpan URI ke tag
                         capturedImage.visibility = View.VISIBLE
                         viewFinder.visibility = View.GONE
                         fabProcess.visibility = View.VISIBLE
@@ -118,6 +121,15 @@ class ScanActivity : AppCompatActivity() {
     private fun processImage() {
         // TODO: Implement image processing logic
         Toast.makeText(this, "Processing image...", Toast.LENGTH_SHORT).show()
+        val imageUri = binding.capturedImage.tag as? Uri
+        if (imageUri != null) {
+            val intent = Intent(this, ConfirmScanActivity::class.java).apply {
+                putExtra("EXTRA_IMAGE_URI", imageUri)
+            }
+            startActivity(intent)
+        } else {
+            Toast.makeText(this, "No image to process.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun startCamera() {
@@ -168,8 +180,8 @@ class ScanActivity : AppCompatActivity() {
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private val REQUIRED_PERMISSIONS = arrayOf(
             Manifest.permission.CAMERA,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+//            Manifest.permission.READ_EXTERNAL_STORAGE,
+//            Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
     }
 }

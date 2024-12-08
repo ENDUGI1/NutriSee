@@ -2,6 +2,7 @@ package com.bangkit.nutrisee.ui.signin
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -10,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.bangkit.nutrisee.MainActivity
 import com.bangkit.nutrisee.R
 import com.bangkit.nutrisee.data.user.UserPreferences
@@ -73,7 +75,8 @@ class SigninActivity : AppCompatActivity() {
 
             result.onSuccess { loginResponse ->
                 // Save login data
-                GlobalScope.launch(Dispatchers.IO) {
+                Log.d("LoginResponse", "refresh token: ${loginResponse.refreshToken.token}")
+                lifecycleScope.launch {
                     userPreferences.saveLoginData(
                         loginResponse.accessToken,
                         loginResponse.refreshToken.token,
