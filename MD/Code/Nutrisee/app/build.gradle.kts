@@ -84,6 +84,7 @@ dependencies {
     // Tambahan yang direkomendasikan
     implementation(libs.circleimageview)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.ui.jvmstubs)
 
     // Testing
     testImplementation(libs.junit)
