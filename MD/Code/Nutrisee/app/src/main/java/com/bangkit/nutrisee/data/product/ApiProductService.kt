@@ -9,4 +9,9 @@ interface ApiProductService {
     suspend fun getProducts(
         @Header("Authorization") token: String
     ): Response<List<ProductResponse>>
+
+    @GET("/api/v1/product/history")
+    suspend fun getProductsHistory(
+        @Header("Authorization") token: String
+    ): Response<List<ProductResponse>>
 }
