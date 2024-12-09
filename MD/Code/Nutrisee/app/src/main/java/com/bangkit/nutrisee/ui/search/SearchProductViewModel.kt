@@ -14,38 +14,72 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class SearchProductViewModel : ViewModel() {
-
     private val _products = MutableLiveData<List<ProductResponse>>()
     val products: LiveData<List<ProductResponse>> = _products
 
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
+    private val _loading = MutableLiveData<Boolean>()
+    val loading: LiveData<Boolean> = _loading
 
-    private val _error = MutableLiveData<String?>()
-    val error: LiveData<String?> = _error
-
-    fun fetchProducts(accessToken: String) {
-        _isLoading.value = true
-        _error.value = null
-
+    fun fetchProducts(token: String) {
         viewModelScope.launch {
+            _loading.value = true
             try {
-                val response = ApiProductConfig.getApiService().getProducts(accessToken)
-                _isLoading.value = false
-
+                val response = ApiProductConfig.getApiService().getProducts(token)
                 if (response.isSuccessful) {
                     _products.value = response.body() ?: emptyList()
                 } else {
-                    val errorMessage = "Error: ${response.code()} - ${response.message()}"
-                    _error.value = errorMessage
+                    Log.e("FetchProducts", "Error: ${response.code()} - ${response.message()}")
                 }
             } catch (e: Exception) {
-                _isLoading.value = false
-                _error.value = "Network error: ${e.message}"
+                Log.e("FetchProducts", "Exception: ${e.message}")
+            } finally {
+                _loading.value = false
             }
         }
     }
 }
+
+
+
+
+//class SearchProductViewModel : ViewModel() {
+//
+//    private val _products = MutableLiveData<List<ProductResponse>>()
+//    val products: LiveData<List<ProductResponse>> = _products
+//
+//    private val _isLoading = MutableLiveData<Boolean>()
+//    val isLoading: LiveData<Boolean> = _isLoading
+//
+//    private val _error = MutableLiveData<String?>()
+//    val error: LiveData<String?> = _error
+//
+//    fun fetchProducts(accessToken: String) {
+//        _isLoading.value = true
+//        _error.value = null
+//
+//        viewModelScope.launch {
+//            try {
+//                Log.d("Authorization Header", "Bearer $accessToken")
+//                val response = ApiProductConfig.getApiService().getProducts(accessToken)
+//                _isLoading.value = false
+//
+//                if (response.isSuccessful) {
+//                    Log.d("Response Body", response.body().toString())
+//                    _products.value = response.body() ?: emptyList()
+//                    if (response.body().isNullOrEmpty()) {
+//                        Log.e("Data Kosong", "Tidak ada data yang diterima dari server.")
+//                    }
+//                } else {
+//                    val errorMessage = "Error: ${response.code()} - ${response.message()}"
+//                    _error.value = errorMessage
+//                }
+//            } catch (e: Exception) {
+//                _isLoading.value = false
+//                _error.value = "Network error: ${e.message}"
+//            }
+//        }
+//    }
+//}
 
 
 

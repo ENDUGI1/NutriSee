@@ -27,21 +27,21 @@
 
         <TextView
             android:id="@+id/tv_item_name"
-            android:layout_width="218dp"
-            android:layout_height="49dp"
-            android:layout_marginEnd="4dp"
+            android:layout_width="187dp"
+            android:layout_height="71dp"
+            android:layout_marginEnd="1dp"
             android:fontFamily="@font/visbymedium"
             android:text="nama produk"
             android:textColor="@android:color/black"
             android:textSize="23sp"
             android:textStyle="bold"
-            card_view:layout_constraintBottom_toTopOf="@+id/imageView"
+            card_view:layout_constraintBottom_toTopOf="@+id/grade"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintVertical_bias="0.0" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/grade"
             android:layout_width="100dp"
             android:layout_height="49dp"
             android:layout_marginEnd="4dp"

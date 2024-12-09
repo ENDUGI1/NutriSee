@@ -6,18 +6,18 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class ProductResponse(
-    @SerializedName("id") val id: Int,
-    @SerializedName("name") val name: String,
-    @SerializedName("image") val image: String,
-    @SerializedName("protein") val protein: Float,
-    @SerializedName("sugar") val sugar: Float,
-    @SerializedName("sodium") val sodium: Double,
-    @SerializedName("saturatedFat") val saturatedFat: Float,
-    @SerializedName("calories") val calories: Float,
-    @SerializedName("fiber") val fiber: Float,
-    @SerializedName("estVegetableContain") val estVegetableContain: Float,
-    @SerializedName("grade") val grade: String,
-    @SerializedName("userId") val userId: String,
-    @SerializedName("createdAt") val createdAt: String,
-    @SerializedName("updatedAt") val updatedAt: String
+    val id: String,
+    val name: String,
+    val image: String,
+    val protein: Double,
+    val sugar: Double,
+    val sodium: Double,
+    val saturatedFat: Double,
+    val calories: Double,
+    val fiber: Double,
+    val estVegetableContain: Double,
+    val grade: String,
+    val userId: String,
+    val createdAt: String,
+    val updatedAt: String
 ) : Parcelable

@@ -8,8 +8,6 @@
     android:paddingBottom="?attr/actionBarSize"
     android:background="@android:color/white">
 
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_product"
         android:layout_width="0dp"
