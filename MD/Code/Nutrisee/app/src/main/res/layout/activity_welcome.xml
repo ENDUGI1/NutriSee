@@ -11,9 +11,9 @@
 
     <ImageView
         android:id="@+id/appLogo"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/nutrisee_logo"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:src="@drawable/welcome_banner"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
