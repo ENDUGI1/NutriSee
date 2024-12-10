@@ -1,7 +1,6 @@
 package com.bangkit.nutrisee.ui.search
 
 import android.content.Intent
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import androidx.lifecycle.ViewModelProvider
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,10 +17,9 @@ import com.bangkit.nutrisee.data.product.ApiProductConfig
 import com.bangkit.nutrisee.data.product.ProductResponse
 import com.bangkit.nutrisee.data.user.UserPreferences
 import com.bangkit.nutrisee.data.user.userPreferencesDataStore
-import com.bangkit.nutrisee.databinding.FragmentSearchProductBinding
 import com.bangkit.nutrisee.ui.detailactivity.DetailProductActivity
+import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -29,7 +27,14 @@ class SearchProductFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
+    private lateinit var searchInput: TextInputEditText
     private lateinit var userPreferences: UserPreferences
+
+    // Make the adapter nullable and initialize it later
+    private var productAdapter: ProductAdapter? = null
+
+    // Store all products as a class-level variable
+    private var allProducts: List<ProductResponse> = listOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,11 +43,15 @@ class SearchProductFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_search_product, container, false)
         recyclerView = view.findViewById(R.id.rv_product)
         progressBar = view.findViewById(R.id.progress_bar)
+        searchInput = view.findViewById(R.id.search_input)
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Setup search input listener
+        setupSearchListener()
 
         // Mengambil AccessToken
         userPreferences = UserPreferences.getInstance(requireContext().userPreferencesDataStore)
@@ -58,6 +67,19 @@ class SearchProductFragment : Fragment() {
         }
     }
 
+    private fun setupSearchListener() {
+        searchInput.doAfterTextChanged { text ->
+            // Only filter if adapter is initialized and products exist
+            productAdapter?.let { adapter ->
+                val query = text.toString()
+                val filteredList = allProducts.filter { product ->
+                    product.name.contains(query, ignoreCase = true)
+                }
+                adapter.updateData(filteredList)
+            }
+        }
+    }
+
     private fun fetchProducts(token: String) {
         progressBar.visibility = View.VISIBLE
 
@@ -68,16 +90,19 @@ class SearchProductFragment : Fragment() {
 
                 if (response.isSuccessful && response.body() != null) {
                     val products = response.body()!!
+                    allProducts = products
+
                     withContext(Dispatchers.Main) {
                         progressBar.visibility = View.GONE
                         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-                        // Set adapter dengan handling klik
-                        recyclerView.adapter = ProductAdapter(products) { product ->
+                        // Create adapter with click handling
+                        productAdapter = ProductAdapter(products) { product ->
                             val intent = Intent(requireContext(), DetailProductActivity::class.java)
-                            intent.putExtra("product", product) // Pastikan `Product` Parcelable
+                            intent.putExtra("product", product)
                             startActivity(intent)
                         }
+                        recyclerView.adapter = productAdapter
                     }
                 } else {
                     Log.e("FetchError", "Error: ${response.message()}")

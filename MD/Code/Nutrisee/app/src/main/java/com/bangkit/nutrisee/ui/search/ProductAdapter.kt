@@ -1,17 +1,13 @@
 package com.bangkit.nutrisee.ui.search
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bangkit.nutrisee.R
 import com.bangkit.nutrisee.data.product.ProductResponse
-import com.bangkit.nutrisee.ui.detailactivity.DetailProductActivity
 import com.bumptech.glide.Glide
 
 class ProductAdapter(
@@ -23,6 +19,8 @@ class ProductAdapter(
         val imgProduct: ImageView = itemView.findViewById(R.id.img_item_product)
         val gradeProduct: ImageView = itemView.findViewById(R.id.grade)
         val tvName: TextView = itemView.findViewById(R.id.tv_item_name)
+
+
 
         fun bind(product: ProductResponse) {
             tvName.text = product.name
@@ -57,6 +55,7 @@ class ProductAdapter(
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         holder.bind(products[position])
     }
+
 
     fun updateData(newProducts: List<ProductResponse>) {
         this.products = newProducts

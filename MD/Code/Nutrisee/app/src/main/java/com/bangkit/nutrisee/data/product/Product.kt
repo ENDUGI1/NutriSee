@@ -21,3 +21,5 @@ data class ProductResponse(
     val createdAt: String,
     val updatedAt: String
 ) : Parcelable
+
+
