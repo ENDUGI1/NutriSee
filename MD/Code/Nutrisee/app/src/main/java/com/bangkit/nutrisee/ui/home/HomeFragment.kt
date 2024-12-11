@@ -62,8 +62,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Inisialisasi ViewModel
-        productViewModel = ViewModelProvider(this).get(SearchProductViewModel::class.java)
-        articleViewModel = ViewModelProvider(this).get(SearchArticleViewModel::class.java)
+        productViewModel = ViewModelProvider(this)[SearchProductViewModel::class.java]
+        articleViewModel = ViewModelProvider(this)[SearchArticleViewModel::class.java]
 
         // Setup User Preferences
         userPreferences = UserPreferences.getInstance(requireContext().userPreferencesDataStore)
@@ -154,9 +154,6 @@ class HomeFragment : Fragment() {
             onDestroy()
         }
     }
-
-
-
 
     private fun fetchData() {
         // Fetch produk

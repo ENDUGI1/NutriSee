@@ -63,7 +63,7 @@
             android:contentDescription="Capture Photo"
             android:padding="16dp"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_camera_capture" />
+            android:src="@drawable/ic_take_photo" />
 
         <ImageButton
             android:id="@+id/btnGallery"
@@ -74,7 +74,7 @@
             android:contentDescription="Open Gallery"
             android:padding="16dp"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_gallery" />
+            android:src="@drawable/ic_open_gallery" />
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton

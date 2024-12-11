@@ -26,9 +26,6 @@
             android:name=".ui.forgotpassword.ForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.signin.GoogleSigninActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.scan.ConfirmScanActivity"
             android:exported="false" />
         <activity

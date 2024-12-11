@@ -1,6 +1,6 @@
 package com.bangkit.nutrisee.data.user
 
-import com.google.gson.annotations.SerializedName
+
 
 data class User (
     val name: String,

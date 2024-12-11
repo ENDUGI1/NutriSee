@@ -72,7 +72,7 @@
                         android:layout_height="wrap_content"
                         android:text="Product Name"
                         android:textSize="22sp"
-                        android:textStyle="bold"
+                        android:fontFamily="@font/visbyextrabold"
                         android:layout_marginBottom="8dp"/>
 
                     <ImageView
@@ -114,6 +114,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:fontFamily="@font/visbymedium"
                             android:text="Saturated Fat: 5g" />
                     </LinearLayout>
                     <View
@@ -140,6 +141,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:fontFamily="@font/visbymedium"
                             android:text="Sugar: 10g" />
                     </LinearLayout>
                     <View
@@ -166,6 +168,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:fontFamily="@font/visbymedium"
                             android:text="Fiber: 3g" />
                     </LinearLayout>
                     <View
@@ -192,6 +195,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:fontFamily="@font/visbymedium"
                             android:text="Protein: 15g" />
                     </LinearLayout>
                     <View
@@ -218,6 +222,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:fontFamily="@font/visbymedium"
                             android:text="Sodium: 200mg" />
                     </LinearLayout>
                     <View
@@ -244,6 +249,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:fontFamily="@font/visbymedium"
                             android:text="Fruit: 20%" />
                     </LinearLayout>
                     <View
@@ -270,6 +276,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:fontFamily="@font/visbymedium"
                             android:text="Energy: 250 kcal" />
                     </LinearLayout>
                     <View
