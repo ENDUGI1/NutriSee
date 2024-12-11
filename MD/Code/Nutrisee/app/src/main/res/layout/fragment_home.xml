@@ -4,67 +4,91 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
-        <!-- Scanning Section -->
+
+        <!-- Header Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
 
+            <TextView
+                android:id="@+id/tv_welcome"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Hello, User!"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
 
+            <ImageView
+                android:id="@+id/iv_profile"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+
+                android:background="@drawable/default_avatar"
+                android:padding="8dp"/>
         </LinearLayout>
 
+        <!-- Scan Product Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_scan_product"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginTop="8dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp">
+            android:layout_height="220dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            android:layout_marginBottom="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:padding="0dp">
+                android:background="@drawable/home_banner"
+                android:padding="16dp">
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/home_banner"
-                    android:contentDescription="Scan Product"/>
+
+
+
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-        <!-- Bagian Produk -->
+
+        <!-- Product Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Produk Kami"
+                android:text="Featured Products"
                 android:textStyle="bold"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/btn_see_all_products"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lihat Semua"
-                android:textColor="@color/black"/>
+                android:text="View All"
+                android:textColor="@color/green"
+                android:background="?attr/selectableItemBackground"
+                android:paddingHorizontal="8dp"/>
         </LinearLayout>
 
         <ProgressBar
@@ -80,30 +104,36 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_home_product"/>
+            tools:listitem="@layout/item_home_product"
+            android:clipToPadding="false"
+            android:paddingEnd="16dp"/>
 
-        <!-- Bagian Artikel -->
+        <!-- Article Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Artikel Kesehatan"
+                android:text="Articles"
                 android:textStyle="bold"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/btn_see_all_articles"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lihat Semua"
-                android:textColor="@color/black"/>
+                android:text="View All"
+                android:textColor="@color/green"
+                android:background="?attr/selectableItemBackground"
+                android:paddingHorizontal="8dp"/>
         </LinearLayout>
 
         <ProgressBar
@@ -119,7 +149,9 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_home_article"/>
+            tools:listitem="@layout/item_home_article"
+            android:clipToPadding="false"
+            android:paddingEnd="16dp"/>
 
     </LinearLayout>
 </ScrollView>

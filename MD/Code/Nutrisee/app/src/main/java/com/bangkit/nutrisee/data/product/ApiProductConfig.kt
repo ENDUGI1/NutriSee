@@ -1,6 +1,6 @@
 package com.bangkit.nutrisee.data.product
 
-import com.bangkit.nutrisee.data.user.ApiUserService
+
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
