@@ -16,6 +16,7 @@ import com.bangkit.nutrisee.MainActivity
 import com.bangkit.nutrisee.R
 import com.bangkit.nutrisee.data.user.UserPreferences
 import com.bangkit.nutrisee.data.user.userPreferencesDataStore
+import com.bangkit.nutrisee.ui.forgotpassword.ForgotPasswordActivity
 import com.bangkit.nutrisee.ui.signup.SignupActivity
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +31,7 @@ class SigninActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var userPreferences: UserPreferences
     private lateinit var viewModel: SigninViewModel
+    private lateinit var forgotPassword: TextView
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +45,7 @@ class SigninActivity : AppCompatActivity() {
         loginButton = findViewById(R.id.btn_login)
         signupLink = findViewById(R.id.signupLink)
         progressBar = findViewById(R.id.progressBar)
+        forgotPassword = findViewById(R.id.forgotPasswordLink)
 
         // Initialize ViewModel and UserPreferences
         viewModel = ViewModelProvider(this)[SigninViewModel::class.java]
@@ -51,6 +54,10 @@ class SigninActivity : AppCompatActivity() {
         // Navigate to SignupActivity
         signupLink.setOnClickListener {
             val intent = Intent(this, SignupActivity::class.java)
+            startActivity(intent)
+        }
+        forgotPassword.setOnClickListener {
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
             startActivity(intent)
         }
 

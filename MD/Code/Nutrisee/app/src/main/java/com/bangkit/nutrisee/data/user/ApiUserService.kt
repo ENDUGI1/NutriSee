@@ -13,6 +13,9 @@ interface ApiUserService {
     @POST("/api/v1/login")
     fun login(@Body request: LoginRequest): Call<LoginResponse>
 
+    @POST("/api/v1/forgot-password")
+    fun forgotPassword(@Body request: ForgotPasswordRequest): Call<ForgotPasswordResponse>
+
     @GET("/api/v1/profile")
     fun getProfile(@Header("Authorization") token: String): Call<UserProfileResponse>
 }

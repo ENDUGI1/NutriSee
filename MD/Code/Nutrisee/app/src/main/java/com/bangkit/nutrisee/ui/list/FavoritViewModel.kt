@@ -41,6 +41,7 @@ class FavoritViewModel(application: Application) : AndroidViewModel(application)
                                 eventStorage.isProductStored(product.id.toString())
                             }
                             _products.postValue(favoriteProducts)
+                            _isLoading.value = false
                         }
                     }
                 }

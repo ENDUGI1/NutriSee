@@ -47,3 +47,11 @@ data class RefreshToken(
 data class RegisterResponse(
     val message: String
 )
+
+data class ForgotPasswordRequest(
+    val email: String
+)
+
+data class ForgotPasswordResponse(
+    val message: String
+)
