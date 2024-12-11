@@ -83,6 +83,9 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        // Inisialisasi ProductStorage
+        productStorage = ProductStorage(requireContext())
+
         logoutButton.setOnClickListener {
             lifecycleScope.launch {
                 userPreferences.clearLoginData()
