@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.bangkit.nutrisee.data.product.ProductStorage
 import com.bangkit.nutrisee.data.user.UserPreferences
 import com.bangkit.nutrisee.data.user.userPreferencesDataStore
 import com.bangkit.nutrisee.databinding.FragmentProfileBinding
@@ -29,6 +30,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var userPreferences: UserPreferences
+    private lateinit var productStorage: ProductStorage
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,6 +86,7 @@ class ProfileFragment : Fragment() {
         logoutButton.setOnClickListener {
             lifecycleScope.launch {
                 userPreferences.clearLoginData()
+                productStorage.clearAllProducts()
                 Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
 
                 val intent = Intent(requireContext(), WelcomeActivity::class.java)

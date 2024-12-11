@@ -19,7 +19,7 @@
             android:id="@+id/img_item_product"
             android:layout_width="128dp"
             android:layout_height="129dp"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"

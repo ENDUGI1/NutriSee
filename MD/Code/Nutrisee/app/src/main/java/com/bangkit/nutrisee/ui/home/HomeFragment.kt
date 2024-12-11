@@ -18,8 +18,10 @@ import com.bangkit.nutrisee.R
 import com.bangkit.nutrisee.data.user.UserPreferences
 import com.bangkit.nutrisee.data.user.userPreferencesDataStore
 import com.bangkit.nutrisee.ui.detailactivity.DetailProductActivity
+import com.bangkit.nutrisee.ui.scan.ScanActivity
 import com.bangkit.nutrisee.ui.search.SearchArticleViewModel
 import com.bangkit.nutrisee.ui.search.SearchProductViewModel
+import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.launch
 
 
@@ -83,6 +85,13 @@ class HomeFragment : Fragment() {
 
         // Fetch data
         fetchData()
+
+        val cardScanProduct: MaterialCardView = view.findViewById(R.id.card_scan_product)
+        cardScanProduct.setOnClickListener {
+            // Navigate to ScanActivity (you'll need to create this)
+            val intent = Intent(requireContext(), ScanActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun setupProductRecyclerView() {
@@ -136,13 +145,18 @@ class HomeFragment : Fragment() {
         btnSeeAllProducts.setOnClickListener {
             // Navigasi ke SearchProductFragment
             findNavController().navigate(R.id.searchProductFragment)
+            onDestroy()
         }
 
         btnSeeAllArticles.setOnClickListener {
             // Navigasi ke SearchArticleFragment
             findNavController().navigate(R.id.searchArticleFragment)
+            onDestroy()
         }
     }
+
+
+
 
     private fun fetchData() {
         // Fetch produk

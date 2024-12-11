@@ -1,9 +1,11 @@
 package com.bangkit.nutrisee.ui.home
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -27,11 +29,16 @@ class HomeArticleAdapter(private val onClick: (String) -> Unit) :
 
     inner class HomeArticleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val imgArticle: ImageView = itemView.findViewById(R.id.img_home_article)
+        private val tvArticleTitle: TextView = itemView.findViewById(R.id.tv_home_article_title)
 
         fun bind(article: ArticlesItem) {
+            Log.d("Article image url", "url: ${article.urlToImage}")
             Glide.with(itemView.context)
                 .load(article.urlToImage)
                 .into(imgArticle)
+
+            // Set article title
+            tvArticleTitle.text = article.title ?: "No Title"
 
             itemView.setOnClickListener {
                 article.url?.let { url -> onClick(url) }

@@ -43,7 +43,7 @@ fun fetchArticles() {
             if (response.isSuccessful) {
                 val articlesList = response.body()?.articles
                     ?.filterNotNull()
-                    ?.filter { it.title != null && it.title != "[Removed]" } ?: emptyList()
+                    ?.filter { it.title != null && it.title != "[Removed]" && it.urlToImage != null && it.urlToImage != ""} ?: emptyList()
 
                 _articles.value = articlesList
             } else {

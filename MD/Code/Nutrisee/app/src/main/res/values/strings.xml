@@ -24,6 +24,7 @@
     <string name="forgot">Reset Password</string>
     <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign Up</string>
     <string name="forgot_password">Forgot Password?</string>
+    <string name="forgot_password_page">Forgot Password</string>
     <string name="welcome_back">Welcome Back</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>

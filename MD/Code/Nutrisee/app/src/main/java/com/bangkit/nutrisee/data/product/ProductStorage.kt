@@ -29,4 +29,9 @@ class ProductStorage(context: Context) {
     fun getAllStoredProductIds(): Set<String> {
         return sharedPreferences.all.keys // Mengambil semua key yang disimpan
     }
+    fun clearAllProducts() {
+        val editor = sharedPreferences.edit()
+        editor.clear() // Menghapus semua data di SharedPreferences
+        editor.apply()
+    }
 }
