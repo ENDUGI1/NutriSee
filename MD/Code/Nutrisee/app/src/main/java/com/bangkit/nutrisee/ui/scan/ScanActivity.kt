@@ -54,6 +54,7 @@ class ScanActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityScanBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
         outputDirectory = getOutputDirectory()
 
@@ -180,8 +181,10 @@ class ScanActivity : AppCompatActivity() {
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private val REQUIRED_PERMISSIONS = arrayOf(
             Manifest.permission.CAMERA,
-//            Manifest.permission.READ_EXTERNAL_STORAGE,
-//            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+//            kalau versi api sdk lebih dari 32 non aktifkan permission read dan write biar ga crash
+//            tapi ga bisa pakai galeri
         )
     }
 }
