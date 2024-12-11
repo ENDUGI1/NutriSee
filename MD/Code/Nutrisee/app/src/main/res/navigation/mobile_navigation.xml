@@ -5,12 +5,12 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
 
-
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.bangkit.nutrisee.ui.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
+
     <fragment
         android:id="@+id/navigation_search"
         android:name="com.bangkit.nutrisee.ui.search.SearchFragment"
@@ -22,9 +22,25 @@
         android:name="com.bangkit.nutrisee.ui.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+
     <fragment
         android:id="@+id/navigation_list"
         android:name="com.bangkit.nutrisee.ui.list.ListFragment"
         android:label="fragment_list"
         tools:layout="@layout/fragment_list" />
+
+    <!-- Tambahkan fragment baru untuk pencarian produk -->
+    <fragment
+        android:id="@+id/searchProductFragment"
+        android:name="com.bangkit.nutrisee.ui.search.SearchProductFragment"
+        android:label="fragment_search_product"
+        tools:layout="@layout/fragment_search_product" />
+
+    <!-- Tambahkan fragment baru untuk pencarian artikel -->
+    <fragment
+        android:id="@+id/searchArticleFragment"
+        android:name="com.bangkit.nutrisee.ui.search.SearchArticleFragment"
+        android:label="fragment_search_article"
+        tools:layout="@layout/fragment_search_article" />
+
 </navigation>

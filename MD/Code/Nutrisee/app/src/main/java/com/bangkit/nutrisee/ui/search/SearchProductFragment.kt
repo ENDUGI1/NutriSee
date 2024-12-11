@@ -36,6 +36,7 @@ class SearchProductFragment : Fragment() {
     // Store all products as a class-level variable
     private var allProducts: List<ProductResponse> = listOf()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,6 +53,7 @@ class SearchProductFragment : Fragment() {
 
         // Setup search input listener
         setupSearchListener()
+
 
         // Mengambil AccessToken
         userPreferences = UserPreferences.getInstance(requireContext().userPreferencesDataStore)
@@ -117,6 +119,10 @@ class SearchProductFragment : Fragment() {
                 }
             }
         }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        searchInput.setText("") // Mengosongkan search bar
     }
 }
 
