@@ -6,19 +6,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    card_view:cardCornerRadius="8dp"
-    card_view:cardElevation="4dp"
+    card_view:cardCornerRadius="16dp"
+    card_view:cardElevation="6dp"
     android:foreground="?android:attr/selectableItemBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="18dp">
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
         <ImageView
             android:id="@+id/img_item_product"
-            android:layout_width="128dp"
-            android:layout_height="129dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:scaleType="fitCenter"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
@@ -27,27 +27,28 @@
 
         <TextView
             android:id="@+id/tv_item_name"
-            android:layout_width="187dp"
-            android:layout_height="71dp"
-            android:layout_marginEnd="1dp"
-            android:fontFamily="@font/visbyextrabold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/visbymedium"
             android:text="nama produk"
             android:textColor="@android:color/black"
-            android:textSize="23sp"
+            android:textSize="18sp"
             android:textStyle="bold"
-            card_view:layout_constraintBottom_toTopOf="@+id/grade"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintTop_toTopOf="parent"
-            card_view:layout_constraintVertical_bias="0.0" />
+            android:maxLines="2"
+            android:ellipsize="end"
+            card_view:layout_constraintEnd_toStartOf="@+id/grade"
+            card_view:layout_constraintStart_toEndOf="@+id/img_item_product"
+            card_view:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/grade"
-            android:layout_width="100dp"
-            android:layout_height="49dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="4dp"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent"
             card_view:srcCompat="@drawable/grade_a" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
