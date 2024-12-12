@@ -3,6 +3,7 @@ package com.bangkit.nutrisee.ui.home
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,10 +19,12 @@ import com.bangkit.nutrisee.R
 import com.bangkit.nutrisee.data.user.UserPreferences
 import com.bangkit.nutrisee.data.user.userPreferencesDataStore
 import com.bangkit.nutrisee.ui.detailactivity.DetailProductActivity
+import com.bangkit.nutrisee.ui.profile.ProfileViewModel
 import com.bangkit.nutrisee.ui.scan.ScanActivity
 import com.bangkit.nutrisee.ui.search.SearchArticleViewModel
 import com.bangkit.nutrisee.ui.search.SearchProductViewModel
 import com.google.android.material.card.MaterialCardView
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 
@@ -39,6 +42,7 @@ class HomeFragment : Fragment() {
     private lateinit var progressBarArticle: ProgressBar
     private lateinit var btnSeeAllProducts: TextView
     private lateinit var btnSeeAllArticles: TextView
+    private lateinit var userWelcome: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,6 +50,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+        val profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
 
         // Inisialisasi view
         rvProduct = view.findViewById(R.id.rv_home_product)
@@ -54,6 +59,45 @@ class HomeFragment : Fragment() {
         progressBarArticle = view.findViewById(R.id.progress_bar_article)
         btnSeeAllProducts = view.findViewById(R.id.btn_see_all_products)
         btnSeeAllArticles = view.findViewById(R.id.btn_see_all_articles)
+        userWelcome = view.findViewById(R.id.tv_welcome)
+
+
+        userPreferences = UserPreferences.getInstance(requireContext().userPreferencesDataStore)
+
+        lifecycleScope.launch {
+            // Cek apakah data nama dan email sudah ada di SharedPreferences
+            val name = userPreferences.getName().first()
+
+            if (name.isNullOrEmpty()) {
+                // Jika data nama dan email belum ada, ambil data dari API
+                val accessToken = userPreferences.getAccessToken().first()
+                profileViewModel.getUserProfile(accessToken)
+
+                profileViewModel.profileResult.observe(viewLifecycleOwner, { result ->
+                    result.onSuccess { profileResponse ->
+                        // Menampilkan data profil
+                        Log.d("UserProfile", "Username: ${profileResponse.data.username}, Email: ${profileResponse.data.email}")
+                        lifecycleScope.launch {
+                            userPreferences.updateUserDetails(
+                                profileResponse.data.username,
+                                profileResponse.data.email
+                            )
+                        }
+                        lifecycleScope.launch {
+                            val haloname = "Halo ${profileResponse.data.username}"
+                            userWelcome.text = haloname
+                        }
+                    }
+                    result.onFailure {
+                        Log.e("UserProfileError", it.message ?: "Error fetching profile")
+                    }
+                })
+            } else {
+                // Jika data nama dan email sudah ada, langsung set ke TextView
+                val haloname = "Halo ${name}"
+                userWelcome.text = haloname
+            }
+        }
 
         return view
     }

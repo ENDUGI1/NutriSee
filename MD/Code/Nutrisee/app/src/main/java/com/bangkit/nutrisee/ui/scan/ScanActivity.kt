@@ -1,6 +1,7 @@
 package com.bangkit.nutrisee.ui.scan
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -119,15 +120,56 @@ class ScanActivity : AppCompatActivity() {
         galleryLauncher.launch(intent)
     }
 
+    private fun Context.copyFileToAppDirectory(sourceUri: Uri): File? {
+        return try {
+            // Buat nama file unik
+            val fileName = "scan_${System.currentTimeMillis()}.jpg"
+            val destinationFile = File(filesDir, fileName)
+
+            // Buka input stream dari URI sumber
+            val inputStream = contentResolver.openInputStream(sourceUri)
+            inputStream?.use { input ->
+                destinationFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+
+            destinationFile
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+//    private fun processImage() {
+//        // TODO: Implement image processing logic
+//        Toast.makeText(this, "Processing image...", Toast.LENGTH_SHORT).show()
+//        val imageUri = binding.capturedImage.tag as? Uri
+//        if (imageUri != null) {
+//            val intent = Intent(this, ConfirmScanActivity::class.java).apply {
+//                putExtra("EXTRA_IMAGE_URI", imageUri)
+//            }
+//            startActivity(intent)
+//        } else {
+//            Toast.makeText(this, "No image to process.", Toast.LENGTH_SHORT).show()
+//        }
+//    }
+
     private fun processImage() {
-        // TODO: Implement image processing logic
-        Toast.makeText(this, "Processing image...", Toast.LENGTH_SHORT).show()
         val imageUri = binding.capturedImage.tag as? Uri
         if (imageUri != null) {
-            val intent = Intent(this, ConfirmScanActivity::class.java).apply {
-                putExtra("EXTRA_IMAGE_URI", imageUri)
+            // Salin file ke direktori aplikasi
+            val copiedFile = copyFileToAppDirectory(imageUri)
+
+            if (copiedFile != null) {
+                val intent = Intent(this, ConfirmScanActivity::class.java).apply {
+                    // Kirim path file yang disalin
+                    putExtra("EXTRA_IMAGE_PATH", copiedFile.absolutePath)
+                }
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Failed to copy image", Toast.LENGTH_SHORT).show()
             }
-            startActivity(intent)
         } else {
             Toast.makeText(this, "No image to process.", Toast.LENGTH_SHORT).show()
         }
@@ -181,8 +223,8 @@ class ScanActivity : AppCompatActivity() {
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private val REQUIRED_PERMISSIONS = arrayOf(
             Manifest.permission.CAMERA,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+//            Manifest.permission.READ_EXTERNAL_STORAGE,
+//            Manifest.permission.WRITE_EXTERNAL_STORAGE
 //            kalau versi api sdk lebih dari 32 non aktifkan permission read dan write biar ga crash
 //            tapi ga bisa pakai galeri
         )
