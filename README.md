@@ -55,7 +55,7 @@ Additionally, the app offers a curated selection of **health articles and news**
 ## **How to Use**  
 1. Open the NutriSee app on your mobile device.
 2. Capture a photo of the product or select a photo from your gallery.
-3. Scan the nutrition label on a product using the app's scanner.  
+3. Input the nutrition label on a product using the app's scanner.  
 4. View the A-D grade and additional nutritional insights.  
 5. Explore health articles and news for tips on healthy living.  
 
