@@ -3,8 +3,8 @@ import {
     getUser, 
     Register,
     Login,
-    redirectOauthLogin,
-    callbackOauthLogin,
+    // redirectOauthLogin,
+    // callbackOauthLogin,
     forgotPassword,
     resetPassword,
     logout,
@@ -16,14 +16,17 @@ import {
 
 import { 
     getAllProducts, 
-    getProductById, 
-    createProduct
+    // getProductByName, 
+    createProduct,
+    getAllProductsbyUserId,
+    _deleteProduct,
 } from '../controller/ProductController.js';
-
+import { Predict } from '../controller/Predict.js';
 import { verifyToken } from '../middleware/VerifyToken.js';
 import { refreshToken } from '../controller/RefreshToken.js';
 import { fetchNews } from '../controller/NewsController.js';
 import { hardLimiter } from '../middleware/limiter.js';
+import { upload } from '../middleware/multer.js';
 
 const router = express.Router();
 
@@ -31,10 +34,10 @@ const router = express.Router();
 router.get('/news', verifyToken, fetchNews);
 
 //produk
+router.get('/product/history', verifyToken, getAllProductsbyUserId);
+// router.post('/product/search', verifyToken, getProductByName); // not used
+router.post('/product', upload, createProduct); // 2 middleware
 router.get('/product', verifyToken, getAllProducts);
-router.get('/product/:id', verifyToken, getProductById);
-router.post('/product', verifyToken, createProduct);
-
 
 router.get('/users',verifyToken, getUser);
 router.get('/profile',verifyToken, profile)
@@ -53,4 +56,7 @@ router.delete('/logout', logout);
 
 router.get('/verify-google-login', verifyGoogleLogin);
 
+// router.post('/predict', Predict)
+
+router.delete('/product', verifyToken, _deleteProduct); // hanya untuk "admin/dev"
 export default router;

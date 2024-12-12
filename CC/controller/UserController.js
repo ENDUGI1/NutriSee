@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Users from "../models/UserModel.js";
 import PasswordReset from '../models/PasswordReset.js';
@@ -13,7 +13,7 @@ dotenv.config();
 import HTML_TEMPLATE from '../utils/htmlTemplate.js';
 import { authConfig } from '../config/AuthConfig.js';
 import { TokenUtils } from '../utils/tokenUtils.js';
-const appUrl = process.env.BASE_URL || 'http://localhost:5000';
+const appUrl = process.env.BASE_URL || 'http://localhost:5000/';
 
 const client = new OAuth2Client(authConfig.GOOGLE_CLIENT_ID);
 
@@ -69,8 +69,15 @@ const getUser = async(req, res) => {
 }
 
 const Register = async(req, res) => {
-    
+   
     const { username , email, password, confPassword }= req.body;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if(!emailRegex.test(email)) {
+        return res.status(400).json({
+            error: true,
+            message: "email harus menggunakan @gmail.com"
+        })
+    }
     
     
     if(password !== confPassword) return res.status(400).json({
@@ -159,7 +166,7 @@ const Login = async(req, res) => { // login with email and password only , modif
         });
     } catch (error) {
         console.error(error);
-        res.status(404).json({error: true,message: "email tidak ditemukan"})
+        res.status(404).json({error: true,message: "username atau email salah"})
     }
 }
 
@@ -244,60 +251,60 @@ const Login = async(req, res) => { // login with email and password only , modif
 //     }
 // };
 
-// const verifyGoogleLogin = async(req,res) => {
-//     if(!client) {
-//         console.log("Google OAuth2 client tidak terinisialisasi.");
-//         return res.status(500).json({ error: "Google OAuth2 client tidak terinisialisasi." });
-//     }
-//     const { token } = req.body;
-//     console.log(token);
-//     try {
-//         const ticket = await client.verifyIdToken({
-//             idToken: token,
-//             audience: authConfig.GOOGLE_CLIENT_ID  // Pastikan sesuai
-//         });
+const verifyGoogleLogin = async(req,res) => {
+    if(!client) {
+        console.log("Google OAuth2 client tidak terinisialisasi.");
+        return res.status(500).json({ error: "Google OAuth2 client tidak terinisialisasi." });
+    }
+    const { token } = req.body;
+    console.log(token);
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: authConfig.GOOGLE_CLIENT_ID  // Pastikan sesuai
+        });
 
-//         const payload = ticket.getPayload();
+        const payload = ticket.getPayload();
 
-//         if(!payload.name || !payload.email) {
-//             return res.status(400).json({ error: "Username atau email tidak ditemukan" });
-//         }
-//         let user = await Users.findOne({
-//             where: { email: payload.email }
-//         });
-//         const id = nanoid(16);
-//         if(!user){
-//             user = await Users.create({
-//                 id: id,
-//                 username: payload.name,
-//                 email: payload.email,
-//             });
-//         }
+        if(!payload.name || !payload.email) {
+            return res.status(400).json({ error: "Username atau email tidak ditemukan" });
+        }
+        let user = await Users.findOne({
+            where: { email: payload.email }
+        });
+        const id = nanoid(16);
+        if(!user){
+            user = await Users.create({
+                id: id,
+                username: payload.name,
+                email: payload.email,
+            });
+        }
 
-//         const accessToken = TokenUtils.generateAccessToken(payload);
-//         const refreshToken = TokenUtils.generateRefreshToken(payload);
+        const accessToken = TokenUtils.generateAccessToken(payload);
+        const refreshToken = TokenUtils.generateRefreshToken(payload);
 
-//         // console.log(accessToken, refreshToken);
-//         await user.update({ refresh_token: refreshToken })
+        // console.log(accessToken, refreshToken);
+        await user.update({ refresh_token: refreshToken })
 
 
-//         return res.status(200).json({
-//             error: false,
-//             message: "Login berhasil",
-//             accessToken: accessToken,
-//             refreshToken: {
-//                 token: refreshToken,
-//                 expiresIn: TokenUtils.expiresRefreshToken // 1 hari
-//             },
-//         });
+        return res.status(200).json({
+            error: false,
+            message: "Login berhasil",
+            accessToken: accessToken,
+            refreshToken: {
+                token: refreshToken,
+                expiresIn: TokenUtils.expiresRefreshToken // 1 hari
+            },
+        });
 
         
 
-//     } catch (error) {
-//         console.error("Kesalahan saat verifikasi token:", error);
-//         return res.status(500).json({ error: "Kesalahan saat verifikasi token." });
-//     }
-// }
+    } catch (error) {
+        console.error("Kesalahan saat verifikasi token:", error);
+        return res.status(500).json({ error: "Kesalahan saat verifikasi token." });
+    }
+}
 
 const forgotPassword = async(req,res) => {
     const { email } = req.body;
@@ -307,7 +314,7 @@ const forgotPassword = async(req,res) => {
         }
     })
     if(!user) return res.status(400).json({
-        message: "email tidak ditemukan" 
+        message: "email tidak terdaftar" 
     })
     
     await PasswordReset.destroy({
@@ -328,7 +335,7 @@ const forgotPassword = async(req,res) => {
     });
 
     
-    const link = `${appUrl}/api/v1/reset-password/${user.id}/${resetToken}`;
+    const link = `${appUrl}api/v1/reset-password/${user.id}/${resetToken}`;
   
     const emailContent = HTML_TEMPLATE(link)
     
@@ -342,12 +349,14 @@ const getResetPassword = async(req,res) => {
     const { token, id } = req.params;
     const resetToken = await PasswordReset.findOne({
         where: {
-            id: id
+            userId: id
         }
     })
+    // console.log(id);
+    
     if(!resetToken || resetToken.length === 0 ) {
         // return res.status(400).json({message: "token tidak ditemukan atau sudah kadaluarsa"});
-        return res.render('reset-password', { id, token, error: 'token tidak ditemukan atau sudah kadaluarsa' });
+        return res.render('404', { id, token, error: 'Token tidak ditemukan atau sudah kadaluarsa' });
     
     }
     if(Date.now() > resetToken.expiresAt) {
@@ -357,18 +366,17 @@ const getResetPassword = async(req,res) => {
             }
         });
         // return res.status(400).json({message: "token reset password sudah kadaluarsa"});
-        res.render('reset-password', { id, token, error: 'token reset password sudah kadaluarsa' });
-
+        res.render('404', { id, token, error: 'Token reset password sudah kadaluarsa' });
     }
     
-    console.log(resetToken)
+    // console.log(resetToken)
     if(!bcrypt.compareSync(token, resetToken.hashedToken)) {
         // return res.status(400).json({message: "token tidak valid"});  
-        return res.render('reset-password', { id, token, error: 'token tidak valid' });
+        return res.render('404', { id, token, error: 'Token tidak valid' });
 
     }
 
-    res.render('reset-password', { id, token, error: null });
+    res.render('reset-password', { id, token, success:false,error: null });
 
 
 }
@@ -379,7 +387,7 @@ const resetPassword = async(req,res) => {
     // console.log(req.params, req.body)
     if(password !== password2) {
         // return res.status(400).json({message: "password dan konfirmasi password tidak sama"});
-        return res.render('reset-password', { id, token, error: 'password dan konfirmasi password tidak sama' });
+        return res.render('reset-password', { id, token,success:false, error: 'password dan konfirmasi password tidak sama' });
     
     }
 
@@ -393,12 +401,12 @@ const resetPassword = async(req,res) => {
         if(user.password === password) {
 
             // return res.status(400).json({message: "password tidak boleh sama dengan password sebelumnya"});
-            return res.render('reset-password', { id, token, error: 'password tidak boleh sama dengan password sebelumnya' });
+            return res.render('reset-password', { id, token,success:false, error: 'password tidak boleh sama dengan password sebelumnya' });
 
         }
         if(!user){
             // return res.status(400).json({message: "user tidak ditemukan"});
-            return res.render('reset-password', { id, token, error: 'user tidak ditemukan' });
+            return res.render('404', { id, token, error: 'user tidak ditemukan' });
         }
         
         const resetToken = await PasswordReset.findOne({
@@ -410,7 +418,7 @@ const resetPassword = async(req,res) => {
 
         if(!resetToken || resetToken.length === 0 ) {
             // return res.status(400).json({message: "token tidak ditemukan atau sudah kadaluarsa"});
-            return res.render('reset-password', { id, token, error: 'token tidak ditemukan atau sudah kadaluarsa' });
+            return res.render('404', { id, token, error: 'token tidak ditemukan atau sudah kadaluarsa' });
         
         }
         
@@ -422,14 +430,14 @@ const resetPassword = async(req,res) => {
                 }
             });
             // return res.status(400).json({message: "token reset password sudah kadaluarsa"});
-            res.render('reset-password', { id, token, error: 'token reset password sudah kadaluarsa' });
+            await res.render('404', { id, token, error: 'token reset password sudah kadaluarsa' });
 
         }
         
         
         if(!bcrypt.compareSync(token, resetToken.hashedToken)) {
             // return res.status(400).json({message: "token tidak valid"});  
-            return res.render('reset-password', { id, token, error: 'token tidak valid' });
+            return res.render('404', { id, token, error: 'token tidak valid' });
 
         }
         const salt = await bcrypt.genSalt();
@@ -445,15 +453,15 @@ const resetPassword = async(req,res) => {
                 userId: id
             }
         })
-        return res.status(200).json({ 
-            error: false,
-            message : 'password berhasil diubah' 
-        });
-        // res.render('reset-password', { id, token, error: 'password tidak boleh sama dengan password sebelumnya' });
+        // return res.status(200).json({ 
+        //     error: false,
+        //     message : 'password berhasil diubah' 
+        // });
+        return res.render('reset-password', { id, token, success: 'password berhasil diubah' });
         
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Gagal mengubah password' }); 
+        res.status(500).json({success:false, message: 'Gagal mengubah password' }); 
     }
 }
 
@@ -493,8 +501,8 @@ profile,
  getUser,
  Register,
  Login,
- redirectOauthLogin,
- callbackOauthLogin,
+//  redirectOauthLogin,
+//  callbackOauthLogin,
  logout,
  forgotPassword,
  getResetPassword,

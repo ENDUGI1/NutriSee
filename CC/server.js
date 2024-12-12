@@ -12,15 +12,22 @@ import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 // import rateLimit from 'express-rate-limit';
 import cors from 'cors';
-import { softLimiter } from './middleware/limiter.js';
+import { softLimiter, timeout } from './middleware/limiter.js';
 import  AuditLog  from './utils/auditLog.js';
+import path from 'path'
+import { fileURLToPath } from 'url';
+
+// Definisikan __dirname secara manual
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let swaggerDocument = yaml.load('./swagger.yaml');
 const url = process.env.BASE_URL || 'http://localhost:5000'; // Set url 
-swaggerDocument.servers = [{ url: `${url}/api/v1/`, description: 'Stagging api URL' }]
+swaggerDocument.servers = [{ url: `${url}api/v1/`, description: 'Stagging api URL' }]
 
 const app = express();
 const port = process.env.PORT || 8080;
+app.set('trust proxy', 1);
 
 const syncTable = async() => {
     await Users.sync(); // nyalakan code ini untuk membuat tabel di db, kemudian matikan
@@ -33,7 +40,7 @@ const syncTable = async() => {
 
 try {
     await db.authenticate();
-    // await syncTable();
+    //await syncTable();
     
     console.log('database Connected')
 } catch (error) {
@@ -43,28 +50,22 @@ try {
 
 
 app.set('view engine', 'ejs');
-// app.set('trust proxy', true)
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(softLimiter);
-app.use((req, res, next) => {
-    res.setTimeout(20000, () => { // timeout 20 detik
-      res.status(503).json({ message: "Permintaan timeout. Silakan coba lagi." });
-    });
-    next();
-});
-
+app.use(timeout);
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // app.use(AuditLog);
-
-
-app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req,res) => {
   res.send(" <a href= '/api/docs'>documentation </a>");
 })
-
+app.get('/not-found', (req,res) => {
+    res.render('404');
+})
 app.use("/api/v1/",router)
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
