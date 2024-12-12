@@ -14,17 +14,17 @@ class SignupViewModel : ViewModel() {
 
     fun registerUser(username: String, email: String, password: String, confirmPassword: String) {
         if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            _registrationResult.value = Result.failure(Exception("Semua field harus diisi!"))
+            _registrationResult.value = Result.failure(Exception("All fields must be filled in!"))
             return
         }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _registrationResult.value = Result.failure(Exception("Format email tidak valid!"))
+            _registrationResult.value = Result.failure(Exception("Invalid email format!"))
             return
         }
 
         if (password != confirmPassword) {
-            _registrationResult.value = Result.failure(Exception("Password dan Konfirmasi Password tidak cocok!"))
+            _registrationResult.value = Result.failure(Exception("Password and Confirm Password do not match!"))
             return
         }
 
@@ -46,14 +46,14 @@ class SignupViewModel : ViewModel() {
                         }
                     } else {
                         _registrationResult.value = Result.failure(
-                            Exception("Registrasi gagal: ${response.errorBody()?.string()}")
+                            Exception("Registration failed: ${response.errorBody()?.string()}")
                         )
                     }
                 }
 
                 override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
                     _registrationResult.value = Result.failure(
-                        Exception("Gagal terhubung ke server: ${t.message}")
+                        Exception("Failed to connect to the server: ${t.message}")
                     )
                 }
             })

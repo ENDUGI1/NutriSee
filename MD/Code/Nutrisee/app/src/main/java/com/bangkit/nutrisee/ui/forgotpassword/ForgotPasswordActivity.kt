@@ -36,7 +36,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
                 showLoading(true)
                 viewModel.forgotPassword(email)
             } else {
-                Toast.makeText(this, "Email tidak boleh kosong!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Email cannot be empty!", Toast.LENGTH_SHORT).show()
             }
         }
 

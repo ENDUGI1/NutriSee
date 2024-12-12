@@ -28,19 +28,19 @@ class ForgotPasswordViewModel : ViewModel() {
                             _forgotPasswordResult.value = Result.success(forgotPasswordResponse)
                         } else {
                             _forgotPasswordResult.value = Result.failure(
-                                Exception("Respons kosong dari server!")
+                                Exception("Empty response from the server!")
                             )
                         }
                     } else {
                         _forgotPasswordResult.value = Result.failure(
-                            Exception("Gagal, periksa email Anda!")
+                            Exception("Failing that, check your email!")
                         )
                     }
                 }
 
                 override fun onFailure(call: Call<ForgotPasswordResponse>, t: Throwable) {
                     _forgotPasswordResult.value = Result.failure(
-                        Exception("Gagal terhubung ke server: ${t.message}")
+                        Exception("Failed to connect to the server: ${t.message}")
                     )
                 }
             })

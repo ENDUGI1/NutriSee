@@ -64,7 +64,7 @@ class SigninActivity : AppCompatActivity() {
                 showLoading(true)
                 viewModel.loginUser(email, password)
             } else {
-                Toast.makeText(this, "Email dan password tidak boleh kosong!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Email and password cannot be empty!", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -81,7 +81,7 @@ class SigninActivity : AppCompatActivity() {
                     )
                 }
 
-                Toast.makeText(this, "Login berhasil!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Login Succeeded!", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }.onFailure { exception ->
