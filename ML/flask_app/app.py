@@ -8,14 +8,13 @@ model = tf.keras.models.load_model("models/nutrisee_model.h5")
 
 app = Flask(__name__)
 
-@app.route("/predict", methods=["GET"])
+@app.route("/predict", methods=["POST"])
 def predict():
 
   data_csv = pd.read_csv('data/data.csv')
 
   X = data_csv[['saturated-fat_100g', 'sugars_100g', 'fiber_100g', 'proteins_100g',
   'sodium_100g', 'fruits-vegetables-nuts-estimate-from-ingredients_100g', 'energy_kj']]
-
 
   # Normalize features
   scaler = StandardScaler()
