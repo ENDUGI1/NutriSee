@@ -11,8 +11,10 @@ Additionally, the app offers a curated selection of **health articles and news**
 ---
 
 ## **Key Features**  
-- **A-D Grading System:** Instantly scan and simplify complex nutritional information.  
-- **Health News & Articles:** Access curated content for informed decision-making.  
+- **A-D Grading System:** Instantly input product nutrition facts and simplify complex nutritional information.  
+- **Health News & Articles:** Access curated content for informed decision-making.
+- **Share Grade Results:** Easily share your A-D grade with friends and family.
+- **Login, Register, and Password Reset:** Secure access with login, registration, and password recovery options.  
 
 ---
 
@@ -51,10 +53,11 @@ Additionally, the app offers a curated selection of **health articles and news**
 ---
 
 ## **How to Use**  
-1. Open the NutriSee app on your mobile device.  
-2. Scan the nutrition label on a product using the app's scanner.  
-3. View the A-D grade and additional nutritional insights.  
-4. Explore health articles and news for tips on healthy living.  
+1. Open the NutriSee app on your mobile device.
+2. Capture a photo of the product or select a photo from your gallery.
+3. Scan the nutrition label on a product using the app's scanner.  
+4. View the A-D grade and additional nutritional insights.  
+5. Explore health articles and news for tips on healthy living.  
 
 ---
 
@@ -68,4 +71,4 @@ For questions or collaboration opportunities, feel free to reach out:
 - **Team Leader:** Ahmad Nur Fauzan  
 - **Email:** anfauzan010104@gmail.com  
 
-Let’s make healthier choices together with **NutriSee**!  
+Choose Smart, Healthy Living with **NutriSee**!  
