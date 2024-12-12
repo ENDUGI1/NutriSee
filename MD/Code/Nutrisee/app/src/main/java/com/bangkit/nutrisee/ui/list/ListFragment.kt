@@ -37,8 +37,8 @@ class ListFragment : Fragment() {
             viewPager.adapter = ListPagerAdapter
             TabLayoutMediator(tabs, viewPager) { tab, position ->
                 val tabText = when (position) {
-                    0 -> "Riwayat"
-                    1 -> "Favorit"
+                    0 -> "History"
+                    1 -> "Favorite"
                     else -> null
                 }
                 tab.customView = createCustomTabView(tabText)

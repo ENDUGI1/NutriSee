@@ -2,16 +2,22 @@ package com.bangkit.nutrisee.ui.detailactivity
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import com.bangkit.nutrisee.R
 import com.bangkit.nutrisee.data.product.ProductResponse
 import com.bangkit.nutrisee.data.product.ProductStorage
 import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.io.File
+import java.io.FileOutputStream
 
 class DetailProductActivity : AppCompatActivity() {
 
@@ -31,10 +37,65 @@ class DetailProductActivity : AppCompatActivity() {
     private lateinit var productStorage: ProductStorage
     private var currentProductId: String = ""
 
+    private fun shareScreenshot() {
+        // Get the root view of the activity
+        val rootView = findViewById<View>(android.R.id.content)
+
+        // Create a bitmap of the entire view
+        val bitmap = Bitmap.createBitmap(
+            rootView.width,
+            rootView.height,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        rootView.draw(canvas)
+
+        // Save bitmap to a temporary file
+        val screenshotFile = File(cacheDir, "product_details.jpg")
+        try {
+            val outputStream = FileOutputStream(screenshotFile)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+            outputStream.flush()
+            outputStream.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return
+        }
+
+        // Generate a content URI using FileProvider
+        val screenshotUri = FileProvider.getUriForFile(
+            this,
+            "${packageName}.fileprovider",
+            screenshotFile
+        )
+
+        // Create a share intent with multiple extras
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "image/jpeg"
+            putExtra(Intent.EXTRA_STREAM, screenshotUri)
+            putExtra(
+                Intent.EXTRA_TEXT,
+                "Check out this nutritional product details from Nutrisee! " +
+                        "Product: ${tvProductName.text}\n" +
+                        "Discover more with Nutrisee nutrition app!"
+            )
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+
+        // Start the share chooser
+        startActivity(
+            Intent.createChooser(
+                shareIntent,
+                "Share Product Details"
+            )
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_product)
         supportActionBar?.hide()
+
 
         // Bind views
         imgProduct = findViewById(R.id.img_product)
@@ -47,10 +108,13 @@ class DetailProductActivity : AppCompatActivity() {
         tvSodium = findViewById(R.id.tv_sodium)
         tvFruitsNuts = findViewById(R.id.tv_fruits_nuts)
         tvEnergy = findViewById(R.id.tv_energy)
-        btnShare = findViewById(R.id.btn_share)
         fabFavorite = findViewById(R.id.fab_favorite)
 
         // Get product data from intent
+        val fabShare: FloatingActionButton = findViewById(R.id.fab_share)
+        fabShare.setOnClickListener {
+            shareScreenshot()
+        }
         val product = intent.getParcelableExtra<ProductResponse>("product") ?: return
 
         // Display product data
@@ -75,14 +139,7 @@ class DetailProductActivity : AppCompatActivity() {
         tvFruitsNuts.text = "Fruits/Vegetables/Nuts: ${product.estVegetableContain}%"
         tvEnergy.text = "Energy: ${product.calories} kcal"
 
-        // Share button
-        btnShare.setOnClickListener {
-            val shareText = "Check out this product: ${product.name}"
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.type = "text/plain"
-            intent.putExtra(Intent.EXTRA_TEXT, shareText)
-            startActivity(Intent.createChooser(intent, "Share Product"))
-        }
+
 
         // Inisialisasi ProductStorage
         productStorage = ProductStorage(this)
@@ -118,4 +175,5 @@ class DetailProductActivity : AppCompatActivity() {
             //finish() // Close the activity
         }
     }
+
 }

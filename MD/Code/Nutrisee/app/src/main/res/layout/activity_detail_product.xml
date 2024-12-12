@@ -30,19 +30,45 @@
                     tools:src="@tools:sample/backgrounds/scenic"
                     app:layout_collapseMode="parallax"/>
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/fab_favorite"
+                <!-- Container for floating action buttons -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
                     android:layout_margin="16dp"
-                    app:srcCompat="@drawable/ic_favorite_border"/>
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:elevation="6dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:spacing="8dp">
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fab_share"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:contentDescription="Share Product"
+                        app:fabSize="mini"
+                        app:srcCompat="@drawable/ic_share"/>
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fab_favorite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="Add to Favorites"
+                        app:fabSize="mini"
+                        app:srcCompat="@drawable/ic_favorite_border"/>
+
+                </LinearLayout>
 
             </FrameLayout>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -288,20 +314,11 @@
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_share"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Share Product"
-                app:icon="@drawable/ic_share"
-                app:cornerRadius="12dp"/>
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_related_products"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"/>
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
