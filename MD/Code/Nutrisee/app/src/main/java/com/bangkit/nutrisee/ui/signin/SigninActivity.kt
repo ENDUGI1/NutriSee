@@ -19,8 +19,6 @@ import com.bangkit.nutrisee.data.user.userPreferencesDataStore
 import com.bangkit.nutrisee.ui.forgotpassword.ForgotPasswordActivity
 import com.bangkit.nutrisee.ui.signup.SignupActivity
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class SigninActivity : AppCompatActivity() {
@@ -39,7 +37,6 @@ class SigninActivity : AppCompatActivity() {
         setContentView(R.layout.activity_signin)
         supportActionBar?.hide()
 
-        // Initialize UI components
         emailEditText = findViewById(R.id.et_email)
         passwordEditText = findViewById(R.id.et_password)
         loginButton = findViewById(R.id.btn_login)
@@ -47,11 +44,9 @@ class SigninActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         forgotPassword = findViewById(R.id.forgotPasswordLink)
 
-        // Initialize ViewModel and UserPreferences
         viewModel = ViewModelProvider(this)[SigninViewModel::class.java]
         userPreferences = UserPreferences.getInstance(applicationContext.userPreferencesDataStore)
 
-        // Navigate to SignupActivity
         signupLink.setOnClickListener {
             val intent = Intent(this, SignupActivity::class.java)
             startActivity(intent)
@@ -61,13 +56,11 @@ class SigninActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Set onClickListener for login button
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                // Show loading
                 showLoading(true)
                 viewModel.loginUser(email, password)
             } else {
@@ -75,13 +68,10 @@ class SigninActivity : AppCompatActivity() {
             }
         }
 
-        // Observe login result
         viewModel.loginResult.observe(this) { result ->
-            // Hide loading
             showLoading(false)
 
             result.onSuccess { loginResponse ->
-                // Save login data
                 Log.d("LoginResponse", "refresh token: ${loginResponse.refreshToken.token}")
                 lifecycleScope.launch {
                     userPreferences.saveLoginData(

@@ -16,13 +16,11 @@ class SigninViewModel : ViewModel() {
     val loginResult: LiveData<Result<LoginResponse>> = _loginResult
 
     fun loginUser(email: String, password: String) {
-        // Input validation
         if (email.isEmpty() || password.isEmpty()) {
             _loginResult.value = Result.failure(Exception("Email dan password tidak boleh kosong!"))
             return
         }
 
-        // Create login request
         val request = LoginRequest(email, password)
         ApiUserConfig.getApiService().login(request)
             .enqueue(object : Callback<LoginResponse> {

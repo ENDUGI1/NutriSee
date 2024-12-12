@@ -13,7 +13,6 @@ class SignupViewModel : ViewModel() {
     val registrationResult: LiveData<Result<String>> = _registrationResult
 
     fun registerUser(username: String, email: String, password: String, confirmPassword: String) {
-        // Input validation
         if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             _registrationResult.value = Result.failure(Exception("Semua field harus diisi!"))
             return
@@ -29,7 +28,6 @@ class SignupViewModel : ViewModel() {
             return
         }
 
-        // Make registration request
         val request = RegisterRequest(username, email, password, confirmPassword)
         ApiUserConfig.getApiService().register(request)
             .enqueue(object : Callback<RegisterResponse> {

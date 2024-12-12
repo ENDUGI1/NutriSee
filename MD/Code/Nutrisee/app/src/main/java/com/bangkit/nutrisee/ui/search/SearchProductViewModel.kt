@@ -6,11 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bangkit.nutrisee.data.product.ApiProductConfig
-import com.bangkit.nutrisee.data.product.ApiProductService
 import com.bangkit.nutrisee.data.product.ProductResponse
-import com.bangkit.nutrisee.data.retrofit.ApiNewsConfig
-import com.bangkit.nutrisee.data.user.UserPreferences
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class SearchProductViewModel : ViewModel() {

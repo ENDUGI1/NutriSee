@@ -26,7 +26,7 @@ class FavoritViewModel(application: Application) : AndroidViewModel(application)
     private val userPreferences: UserPreferences = UserPreferences.getInstance(application.userPreferencesDataStore)
 
     fun fetchFavoriteProducts() {
-        _isLoading.value = true // Start loading
+        _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 userPreferences.getAccessToken().collect { token ->
@@ -47,7 +47,7 @@ class FavoritViewModel(application: Application) : AndroidViewModel(application)
             } catch (e: Exception) {
                 Log.e("FetchError", "Exception: $e")
             } finally {
-                _isLoading.postValue(false) // Hide loading indicator
+                _isLoading.postValue(false)
             }
         }
     }

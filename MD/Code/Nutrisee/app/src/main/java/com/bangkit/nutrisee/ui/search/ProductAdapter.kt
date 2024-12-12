@@ -38,10 +38,8 @@ class ProductAdapter(
                 else -> gradeProduct.setImageResource(R.drawable.placeholder_image)
             }
 
-            // Item click listener
-//            itemView.setOnClickListener { onItemClick(product) }
             itemView.setOnClickListener {
-                onItemClick(product) // Memanggil lambda untuk klik
+                onItemClick(product)
             }
         }
     }

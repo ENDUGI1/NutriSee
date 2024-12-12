@@ -81,7 +81,6 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.android.gif.drawable)
 
-    // Tambahan yang direkomendasikan
     implementation(libs.circleimageview)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.ui.jvmstubs)

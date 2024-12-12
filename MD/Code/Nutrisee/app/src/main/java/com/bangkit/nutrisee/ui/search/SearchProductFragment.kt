@@ -30,10 +30,8 @@ class SearchProductFragment : Fragment() {
     private lateinit var searchInput: TextInputEditText
     private lateinit var userPreferences: UserPreferences
 
-    // Make the adapter nullable and initialize it later
     private var productAdapter: ProductAdapter? = null
 
-    // Store all products as a class-level variable
     private var allProducts: List<ProductResponse> = listOf()
 
 
@@ -51,11 +49,8 @@ class SearchProductFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Setup search input listener
         setupSearchListener()
 
-
-        // Mengambil AccessToken
         userPreferences = UserPreferences.getInstance(requireContext().userPreferencesDataStore)
         lifecycleScope.launch {
             userPreferences.getAccessToken().collect { token ->
@@ -98,7 +93,6 @@ class SearchProductFragment : Fragment() {
                         progressBar.visibility = View.GONE
                         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-                        // Create adapter with click handling
                         productAdapter = ProductAdapter(products) { product ->
                             val intent = Intent(requireContext(), DetailProductActivity::class.java)
                             intent.putExtra("product", product)
@@ -122,6 +116,6 @@ class SearchProductFragment : Fragment() {
     }
     override fun onDestroyView() {
         super.onDestroyView()
-        searchInput.setText("") // Mengosongkan search bar
+        searchInput.setText("")
     }
 }

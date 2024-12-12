@@ -21,10 +21,8 @@ class SearchFragment : Fragment(){
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
-        //return inflater.inflate(R.layout.fragment_search, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,7 +41,6 @@ class SearchFragment : Fragment(){
         }
     }
 
-    // Fungsi untuk membuat custom view tab
     private fun createCustomTabView(text: String?): View {
         val textView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_tab, null) as TextView
         textView.text = text

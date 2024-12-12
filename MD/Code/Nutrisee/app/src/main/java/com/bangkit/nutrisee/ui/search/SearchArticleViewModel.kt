@@ -23,10 +23,8 @@ class SearchArticleViewModel : ViewModel() {
     val error: LiveData<String?> = _error
 
 fun fetchArticles() {
-    // Set loading to true before starting the fetch
     _isLoading.value = true
 
-    // Reset error
     _error.value = null
 
     val apiService = ApiNewsConfig.getApiService()
@@ -37,7 +35,6 @@ fun fetchArticles() {
             call: Call<HealthNewsResponse>,
             response: Response<HealthNewsResponse>
         ) {
-            // Always set loading to false when response is received
             _isLoading.value = false
 
             if (response.isSuccessful) {
@@ -54,7 +51,6 @@ fun fetchArticles() {
         }
 
         override fun onFailure(call: Call<HealthNewsResponse>, t: Throwable) {
-            // Set loading to false on failure
             _isLoading.value = false
 
             val errorMessage = "Network error: ${t.message}"

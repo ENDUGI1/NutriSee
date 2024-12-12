@@ -45,6 +45,5 @@ class HomeProductAdapter(
         this.products = newProducts
         notifyDataSetChanged()
     }
-
     override fun getItemCount(): Int = products.size
 }

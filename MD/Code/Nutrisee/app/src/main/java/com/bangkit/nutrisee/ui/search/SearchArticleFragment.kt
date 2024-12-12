@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bangkit.nutrisee.R
 
-
 class SearchArticleFragment : Fragment() {
 
     private lateinit var viewModel: SearchArticleViewModel
@@ -27,7 +26,6 @@ class SearchArticleFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_search_article, container, false)
 
-        // Initialize views
         progressBar = view.findViewById(R.id.progress_bar)
         rvArticle = view.findViewById(R.id.rv_article)
 
@@ -37,10 +35,8 @@ class SearchArticleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize ViewModel
         viewModel = ViewModelProvider(this)[SearchArticleViewModel::class.java]
 
-        // Setup RecyclerView
         articleAdapter = ArticleAdapter { url ->
             openBrowser(url)
         }
@@ -48,18 +44,15 @@ class SearchArticleFragment : Fragment() {
         rvArticle.layoutManager = LinearLayoutManager(requireContext())
         rvArticle.adapter = articleAdapter
 
-        // Observe loading state
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
             rvArticle.visibility = if (isLoading) View.GONE else View.VISIBLE
         }
 
-        // Observe data from ViewModel
         viewModel.articles.observe(viewLifecycleOwner) { articles ->
             articleAdapter.submitList(articles)
         }
 
-        // Fetch articles
         viewModel.fetchArticles()
     }
 

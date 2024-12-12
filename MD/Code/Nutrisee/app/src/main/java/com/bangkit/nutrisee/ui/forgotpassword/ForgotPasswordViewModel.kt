@@ -15,7 +15,6 @@ class ForgotPasswordViewModel : ViewModel() {
     val forgotPasswordResult: LiveData<Result<ForgotPasswordResponse>> = _forgotPasswordResult
 
     fun forgotPassword(email: String) {
-        // Create forgot password request
         val request = ForgotPasswordRequest(email)
         ApiUserConfig.getApiService().forgotPassword(request)
             .enqueue(object : Callback<ForgotPasswordResponse> {

@@ -52,7 +52,6 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         val profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
 
-        // Inisialisasi view
         rvProduct = view.findViewById(R.id.rv_home_product)
         rvArticle = view.findViewById(R.id.rv_home_article)
         progressBarProduct = view.findViewById(R.id.progress_bar_product)
@@ -65,17 +64,14 @@ class HomeFragment : Fragment() {
         userPreferences = UserPreferences.getInstance(requireContext().userPreferencesDataStore)
 
         lifecycleScope.launch {
-            // Cek apakah data nama dan email sudah ada di SharedPreferences
             val name = userPreferences.getName().first()
 
             if (name.isNullOrEmpty()) {
-                // Jika data nama dan email belum ada, ambil data dari API
                 val accessToken = userPreferences.getAccessToken().first()
                 profileViewModel.getUserProfile(accessToken)
 
                 profileViewModel.profileResult.observe(viewLifecycleOwner, { result ->
                     result.onSuccess { profileResponse ->
-                        // Menampilkan data profil
                         Log.d("UserProfile", "Username: ${profileResponse.data.username}, Email: ${profileResponse.data.email}")
                         lifecycleScope.launch {
                             userPreferences.updateUserDetails(
@@ -93,7 +89,6 @@ class HomeFragment : Fragment() {
                     }
                 })
             } else {
-                // Jika data nama dan email sudah ada, langsung set ke TextView
                 val haloname = "Halo ${name}"
                 userWelcome.text = haloname
             }
@@ -105,34 +100,22 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Inisialisasi ViewModel
         productViewModel = ViewModelProvider(this)[SearchProductViewModel::class.java]
         articleViewModel = ViewModelProvider(this)[SearchArticleViewModel::class.java]
 
-        // Setup User Preferences
         userPreferences = UserPreferences.getInstance(requireContext().userPreferencesDataStore)
 
-        // Setup Recycler View dan Adapter untuk Produk
         setupProductRecyclerView()
-
-        // Setup Recycler View dan Adapter untuk Artikel
         setupArticleRecyclerView()
 
-        // Observasi data produk
         observeProductData()
-
-        // Observasi data artikel
         observeArticleData()
-
-        // Setup tombol "See All"
         setupSeeAllButtons()
 
-        // Fetch data
         fetchData()
 
         val cardScanProduct: MaterialCardView = view.findViewById(R.id.card_scan_product)
         cardScanProduct.setOnClickListener {
-            // Navigate to ScanActivity (you'll need to create this)
             val intent = Intent(requireContext(), ScanActivity::class.java)
             startActivity(intent)
         }
@@ -163,19 +146,13 @@ class HomeFragment : Fragment() {
 
     private fun observeProductData() {
         productViewModel.products.observe(viewLifecycleOwner) { products ->
-            // Batasi hanya 4 produk pertama
             val limitedProducts = products.take(4)
             homeProductAdapter.updateData(limitedProducts)
         }
-
-//        productViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-//            progressBarProduct.visibility = if (isLoading) View.VISIBLE else View.GONE
-//        }
     }
 
     private fun observeArticleData() {
         articleViewModel.articles.observe(viewLifecycleOwner) { articles ->
-            // Batasi hanya 4 artikel pertama
             val limitedArticles = articles.take(4)
             homeArticleAdapter.submitList(limitedArticles)
         }
@@ -187,20 +164,17 @@ class HomeFragment : Fragment() {
 
     private fun setupSeeAllButtons() {
         btnSeeAllProducts.setOnClickListener {
-            // Navigasi ke SearchProductFragment
             findNavController().navigate(R.id.searchProductFragment)
             onDestroy()
         }
 
         btnSeeAllArticles.setOnClickListener {
-            // Navigasi ke SearchArticleFragment
             findNavController().navigate(R.id.searchArticleFragment)
             onDestroy()
         }
     }
 
     private fun fetchData() {
-        // Fetch produk
         lifecycleScope.launch {
             userPreferences.getAccessToken().collect { token ->
                 if (token.isNotEmpty()) {
@@ -208,8 +182,6 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-
-        // Fetch artikel
         articleViewModel.fetchArticles()
     }
 }

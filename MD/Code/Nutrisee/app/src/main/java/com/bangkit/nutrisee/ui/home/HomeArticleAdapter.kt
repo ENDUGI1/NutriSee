@@ -37,7 +37,6 @@ class HomeArticleAdapter(private val onClick: (String) -> Unit) :
                 .load(article.urlToImage)
                 .into(imgArticle)
 
-            // Set article title
             tvArticleTitle.text = article.title ?: "No Title"
 
             itemView.setOnClickListener {

@@ -8,11 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.ViewModelProvider
 import com.bangkit.nutrisee.R
-import com.bangkit.nutrisee.databinding.FragmentListBinding
 import com.bangkit.nutrisee.databinding.FragmentSearchBinding
-import com.bangkit.nutrisee.ui.search.SectionsPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 
 class ListFragment : Fragment() {
@@ -24,10 +21,8 @@ class ListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
-        //return inflater.inflate(R.layout.fragment_search, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,7 +42,6 @@ class ListFragment : Fragment() {
         }
     }
 
-    // Fungsi untuk membuat custom view tab
     private fun createCustomTabView(text: String?): View {
         val textView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_tab, null) as TextView
         textView.text = text

@@ -7,10 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import com.bangkit.nutrisee.R
 import com.bangkit.nutrisee.ui.welcome.WelcomeActivity
@@ -26,20 +23,16 @@ class ForgotPasswordActivity : AppCompatActivity() {
         setContentView(R.layout.activity_forgot_password)
         supportActionBar?.hide()
 
-        // Initialize UI components
         emailEditText = findViewById(R.id.et_email)
         forgotPasswordButton = findViewById(R.id.btn_login)
         progressBar = findViewById(R.id.progressBar)
 
-        // Initialize ViewModel
         viewModel = ViewModelProvider(this)[ForgotPasswordViewModel::class.java]
 
-        // Set onClickListener for Forgot Password button
         forgotPasswordButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
 
             if (email.isNotEmpty()) {
-                // Show loading
                 showLoading(true)
                 viewModel.forgotPassword(email)
             } else {
@@ -47,14 +40,11 @@ class ForgotPasswordActivity : AppCompatActivity() {
             }
         }
 
-        // Observe forgot password result
         viewModel.forgotPasswordResult.observe(this) { result ->
-            // Hide loading
             showLoading(false)
 
             result.onSuccess { response ->
                 Toast.makeText(this, response.message, Toast.LENGTH_SHORT).show()
-                // Navigate to WelcomeActivity
                 val intent = Intent(this, WelcomeActivity::class.java)
                 startActivity(intent)
                 finish()

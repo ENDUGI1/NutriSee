@@ -45,7 +45,6 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
         supportActionBar?.hide()
 
-        // Handle FAB click
         binding.scanFab.setOnClickListener {
             val intent = Intent(this, ScanActivity::class.java)
             startActivity(intent)

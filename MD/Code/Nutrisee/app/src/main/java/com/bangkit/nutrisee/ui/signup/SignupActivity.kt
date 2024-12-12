@@ -36,33 +36,28 @@ class SignupActivity : AppCompatActivity() {
         val loginLink = findViewById<TextView>(R.id.loginLink)
         progressBar = findViewById(R.id.progressBar)
 
-        // Login link navigation
         loginLink.setOnClickListener {
             val intent = Intent(this, SigninActivity::class.java)
             startActivity(intent)
         }
 
-        // Observe registration result
         viewModel.registrationResult.observe(this) { result ->
-            // Hide loading
             showLoading(false)
 
             result.onSuccess { message ->
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-                finish() // Close SignupActivity
+                finish()
             }.onFailure { exception ->
                 Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Handle signup button
         signupButton.setOnClickListener {
             val username = usernameInput.text.toString().trim()
             val email = emailInput.text.toString().trim()
             val password = passwordInput.text.toString().trim()
             val confirmPassword = confirmPasswordInput.text.toString().trim()
 
-            // Show loading
             showLoading(true)
             viewModel.registerUser(username, email, password, confirmPassword)
         }

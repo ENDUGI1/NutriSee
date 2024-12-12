@@ -1,7 +1,6 @@
 package com.bangkit.nutrisee.ui.list
 
 import android.content.Intent
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -41,7 +40,6 @@ class RiwayatFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Mengambil AccessToken
         userPreferences = UserPreferences.getInstance(requireContext().userPreferencesDataStore)
         lifecycleScope.launch {
             userPreferences.getAccessToken().collect { token ->
@@ -69,10 +67,9 @@ class RiwayatFragment : Fragment() {
                         progressBar.visibility = View.GONE
                         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-                        // Set adapter dengan handling klik
                         recyclerView.adapter = ProductAdapter(productHistory) { product ->
                             val intent = Intent(requireContext(), DetailProductActivity::class.java)
-                            intent.putExtra("product", product) // Pastikan `Product` Parcelable
+                            intent.putExtra("product", product)
                             startActivity(intent)
                         }
                     }

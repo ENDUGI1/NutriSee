@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bangkit.nutrisee.data.product.ProductStorage
@@ -19,10 +18,8 @@ import com.bangkit.nutrisee.data.user.UserPreferences
 import com.bangkit.nutrisee.data.user.userPreferencesDataStore
 import com.bangkit.nutrisee.databinding.FragmentProfileBinding
 import com.bangkit.nutrisee.ui.welcome.WelcomeActivity
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class ProfileFragment : Fragment() {
 
@@ -48,18 +45,15 @@ class ProfileFragment : Fragment() {
         val instagramButton: ImageButton = binding.buttonInstagram
 
         lifecycleScope.launch {
-            // Cek apakah data nama dan email sudah ada di SharedPreferences
             val name = userPreferences.getName().first()
             val email = userPreferences.getEmail().first()
 
             if (name.isNullOrEmpty() || email.isNullOrEmpty()) {
-                // Jika data nama dan email belum ada, ambil data dari API
                 val accessToken = userPreferences.getAccessToken().first()
                 profileViewModel.getUserProfile(accessToken)
 
                 profileViewModel.profileResult.observe(viewLifecycleOwner, { result ->
                     result.onSuccess { profileResponse ->
-                        // Menampilkan data profil
                         Log.d("UserProfile", "Username: ${profileResponse.data.username}, Email: ${profileResponse.data.email}")
                         lifecycleScope.launch {
                             userPreferences.updateUserDetails(
@@ -77,13 +71,10 @@ class ProfileFragment : Fragment() {
                     }
                 })
             } else {
-                // Jika data nama dan email sudah ada, langsung set ke TextView
                 binding.textUsername.text = name
                 binding.textEmail.text = email
             }
         }
-
-        // Inisialisasi ProductStorage
         productStorage = ProductStorage(requireContext())
 
         logoutButton.setOnClickListener {

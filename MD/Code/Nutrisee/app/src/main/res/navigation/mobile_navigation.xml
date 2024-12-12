@@ -29,14 +29,12 @@
         android:label="fragment_list"
         tools:layout="@layout/fragment_list" />
 
-    <!-- Tambahkan fragment baru untuk pencarian produk -->
     <fragment
         android:id="@+id/searchProductFragment"
         android:name="com.bangkit.nutrisee.ui.search.SearchProductFragment"
         android:label="fragment_search_product"
         tools:layout="@layout/fragment_search_product" />
 
-    <!-- Tambahkan fragment baru untuk pencarian artikel -->
     <fragment
         android:id="@+id/searchArticleFragment"
         android:name="com.bangkit.nutrisee.ui.search.SearchArticleFragment"

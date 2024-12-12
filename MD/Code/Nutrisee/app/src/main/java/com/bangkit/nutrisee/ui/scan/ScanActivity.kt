@@ -43,7 +43,7 @@ class ScanActivity : AppCompatActivity() {
             val selectedImageUri = result.data?.data
             binding.apply {
                 capturedImage.setImageURI(selectedImageUri)
-                capturedImage.tag = selectedImageUri // Simpan URI ke tag
+                capturedImage.tag = selectedImageUri
                 capturedImage.visibility = View.VISIBLE
                 viewFinder.visibility = View.GONE
                 fabProcess.visibility = View.VISIBLE
@@ -102,7 +102,7 @@ class ScanActivity : AppCompatActivity() {
                     val savedUri = Uri.fromFile(photoFile)
                     binding.apply {
                         capturedImage.setImageURI(savedUri)
-                        capturedImage.tag = savedUri // Simpan URI ke tag
+                        capturedImage.tag = savedUri
                         capturedImage.visibility = View.VISIBLE
                         viewFinder.visibility = View.GONE
                         fabProcess.visibility = View.VISIBLE
@@ -122,11 +122,9 @@ class ScanActivity : AppCompatActivity() {
 
     private fun Context.copyFileToAppDirectory(sourceUri: Uri): File? {
         return try {
-            // Buat nama file unik
             val fileName = "scan_${System.currentTimeMillis()}.jpg"
             val destinationFile = File(filesDir, fileName)
 
-            // Buka input stream dari URI sumber
             val inputStream = contentResolver.openInputStream(sourceUri)
             inputStream?.use { input ->
                 destinationFile.outputStream().use { output ->
@@ -141,29 +139,13 @@ class ScanActivity : AppCompatActivity() {
         }
     }
 
-//    private fun processImage() {
-//        // TODO: Implement image processing logic
-//        Toast.makeText(this, "Processing image...", Toast.LENGTH_SHORT).show()
-//        val imageUri = binding.capturedImage.tag as? Uri
-//        if (imageUri != null) {
-//            val intent = Intent(this, ConfirmScanActivity::class.java).apply {
-//                putExtra("EXTRA_IMAGE_URI", imageUri)
-//            }
-//            startActivity(intent)
-//        } else {
-//            Toast.makeText(this, "No image to process.", Toast.LENGTH_SHORT).show()
-//        }
-//    }
-
     private fun processImage() {
         val imageUri = binding.capturedImage.tag as? Uri
         if (imageUri != null) {
-            // Salin file ke direktori aplikasi
             val copiedFile = copyFileToAppDirectory(imageUri)
 
             if (copiedFile != null) {
                 val intent = Intent(this, ConfirmScanActivity::class.java).apply {
-                    // Kirim path file yang disalin
                     putExtra("EXTRA_IMAGE_PATH", copiedFile.absolutePath)
                 }
                 startActivity(intent)
@@ -223,10 +205,6 @@ class ScanActivity : AppCompatActivity() {
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private val REQUIRED_PERMISSIONS = arrayOf(
             Manifest.permission.CAMERA,
-//            Manifest.permission.READ_EXTERNAL_STORAGE,
-//            Manifest.permission.WRITE_EXTERNAL_STORAGE
-//            kalau versi api sdk lebih dari 32 non aktifkan permission read dan write biar ga crash
-//            tapi ga bisa pakai galeri
         )
     }
 }

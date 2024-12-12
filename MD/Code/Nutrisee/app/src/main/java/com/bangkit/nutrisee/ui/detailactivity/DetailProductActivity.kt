@@ -38,10 +38,8 @@ class DetailProductActivity : AppCompatActivity() {
     private var currentProductId: String = ""
 
     private fun shareScreenshot() {
-        // Get the root view of the activity
         val rootView = findViewById<View>(android.R.id.content)
 
-        // Create a bitmap of the entire view
         val bitmap = Bitmap.createBitmap(
             rootView.width,
             rootView.height,
@@ -50,7 +48,6 @@ class DetailProductActivity : AppCompatActivity() {
         val canvas = Canvas(bitmap)
         rootView.draw(canvas)
 
-        // Save bitmap to a temporary file
         val screenshotFile = File(cacheDir, "product_details.jpg")
         try {
             val outputStream = FileOutputStream(screenshotFile)
@@ -62,14 +59,12 @@ class DetailProductActivity : AppCompatActivity() {
             return
         }
 
-        // Generate a content URI using FileProvider
         val screenshotUri = FileProvider.getUriForFile(
             this,
             "${packageName}.fileprovider",
             screenshotFile
         )
 
-        // Create a share intent with multiple extras
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "image/jpeg"
             putExtra(Intent.EXTRA_STREAM, screenshotUri)
@@ -82,7 +77,6 @@ class DetailProductActivity : AppCompatActivity() {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
 
-        // Start the share chooser
         startActivity(
             Intent.createChooser(
                 shareIntent,
@@ -97,7 +91,6 @@ class DetailProductActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
 
-        // Bind views
         imgProduct = findViewById(R.id.img_product)
         imgGradeScore = findViewById(R.id.img_grade_score)
         tvProductName = findViewById(R.id.tv_product_name)
@@ -110,18 +103,15 @@ class DetailProductActivity : AppCompatActivity() {
         tvEnergy = findViewById(R.id.tv_energy)
         fabFavorite = findViewById(R.id.fab_favorite)
 
-        // Get product data from intent
         val fabShare: FloatingActionButton = findViewById(R.id.fab_share)
         fabShare.setOnClickListener {
             shareScreenshot()
         }
         val product = intent.getParcelableExtra<ProductResponse>("product") ?: return
 
-        // Display product data
         tvProductName.text = product.name
         Glide.with(this).load(product.image).into(imgProduct)
 
-        // Set grade image
         when (product.grade) {
             "A" -> imgGradeScore.setImageResource(R.drawable.grade_a)
             "B" -> imgGradeScore.setImageResource(R.drawable.grade_b)
@@ -140,39 +130,30 @@ class DetailProductActivity : AppCompatActivity() {
         tvEnergy.text = "Energy: ${product.calories} kcal"
 
 
-
-        // Inisialisasi ProductStorage
         productStorage = ProductStorage(this)
 
-        // Mengambil produk yang dipilih dari Intent
         currentProductId = product.id ?: ""
 
-        // Set FAB icon based on favorite status
         if (productStorage.isProductStored(product.id)) {
-            fabFavorite.setImageResource(R.drawable.ic_favorite) // Favorite icon
+            fabFavorite.setImageResource(R.drawable.ic_favorite)
         } else {
-            fabFavorite.setImageResource(R.drawable.ic_favorite_border) // Non-favorite icon
+            fabFavorite.setImageResource(R.drawable.ic_favorite_border)
         }
 
-        // Favorite button toggle
         fabFavorite.setOnClickListener {
             if (productStorage.isProductStored(product.id)) {
-                // If it's already a favorite, remove it
                 productStorage.removeProductId(product.id)
                 fabFavorite.setImageResource(R.drawable.ic_favorite_border)
             } else {
-                // If it's not a favorite, save it
                 productStorage.saveProductId(product.id)
                 fabFavorite.setImageResource(R.drawable.ic_favorite)
             }
 
-            // Send result back to the fragment
             val intent = Intent().apply {
-                putExtra("isFavoriteChanged", true) // Indicate a change in favorite status
+                putExtra("isFavoriteChanged", true)
                 putExtra("productId", product.id)
             }
             setResult(Activity.RESULT_OK, intent)
-            //finish() // Close the activity
         }
     }
 
