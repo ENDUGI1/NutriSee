@@ -445,7 +445,7 @@ const resetPassword = async(req,res) => {
                 userId: id
             }
         })
-        return res.status(200).json({ 
+        res.status(200).json({ 
             error: false,
             message : 'password berhasil diubah' 
         });

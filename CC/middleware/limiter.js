@@ -2,8 +2,8 @@ import rateLimit from 'express-rate-limit';
 
 
 export const softLimiter = rateLimit({
-    windowMs: 1 * 60 * 1000, // 5 minutes
-    max: 40, 
+    windowMs: 5 * 60 * 1000, // 5 minutes
+    max: 20, 
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
     // message: "Terlalu banyak permintaan dari IP ini, coba lagi nanti.",
@@ -19,7 +19,7 @@ export const softLimiter = rateLimit({
 
 export const hardLimiter = rateLimit({
     windowMs: 60 * 60 * 1000, // 5 minutes
-    max: 10, 
+    max: 3, 
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
     // message: "Terlalu banyak permintaan dari IP ini, coba lagi nanti.",
@@ -32,11 +32,3 @@ export const hardLimiter = rateLimit({
     }
   
 })
-
-
-export const timeout = (req, res, next) => {
-    res.setTimeout(20000, () => { // timeout 20 detik
-      res.status(503).json({ message: "Permintaan timeout. Silakan coba lagi." });
-    });
-    next();
-}
